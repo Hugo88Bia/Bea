@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Bea's Craft World</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body{background:#fef6ff;font-family:Georgia,serif;color:#3a2a4a;min-height:100vh}
+button{cursor:pointer;font-family:inherit;transition:transform 0.1s}
+button:active{transform:scale(0.95)}
+input{font-family:inherit}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(0.5);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:0}}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.bounce{animation:bounce 1s infinite}
+.spin{animation:spin 1s linear infinite}
+.float{animation:float 3s ease-in-out infinite}
+.pop{animation:pop 0.4s ease-out forwards}
+.fadein{animation:fadein 0.4s ease-out}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+var COUNTRIES = [
+  {id:"uk",      name:"United Kingdom", flag:"🇬🇧", color:"#dbeafe", craft:"Paper Crown",       icon:"👑", need:0,  fact:"The UK is made up of four countries: England, Scotland, Wales and Northern Ireland!"},
+  {id:"france",  name:"France",         flag:"🇫🇷", color:"#fce7f3", craft:"Eiffel Tower Card",  icon:"🗼", need:5,  fact:"France is famous for the Eiffel Tower in Paris, which is 330 metres tall!"},
+  {id:"japan",   name:"Japan",          flag:"🇯🇵", color:"#fee2e2", craft:"Origami Crane",      icon:"🕊", need:10, fact:"Japan invented origami — the art of folding paper into beautiful shapes!"},
+  {id:"brazil",  name:"Brazil",         flag:"🇧🇷", color:"#dcfce7", craft:"Carnival Mask",      icon:"🎭", need:18, fact:"Brazil is the largest country in South America and home to the Amazon rainforest!"},
+  {id:"egypt",   name:"Egypt",          flag:"🇪🇬", color:"#fef9c3", craft:"Papyrus Art",        icon:"📜", need:28, fact:"Ancient Egyptians wrote on papyrus — a paper made from plants along the River Nile!"},
+  {id:"india",   name:"India",          flag:"🇮🇳", color:"#ffedd5", craft:"Rangoli Pattern",    icon:"🌺", need:40, fact:"Rangoli is beautiful art made from coloured powder or flower petals on the floor!"},
+  {id:"mexico",  name:"Mexico",         flag:"🇲🇽", color:"#f3e8ff", craft:"Paper Flowers",      icon:"🌸", need:55, fact:"Mexico is famous for its colourful paper flowers called papel picado!"},
+  {id:"australia",name:"Australia",     flag:"🇦🇺", color:"#ecfdf5", craft:"Aboriginal Art",     icon:"🎨", need:72, fact:"Aboriginal Australians have been making art for over 65,000 years — the oldest in the world!"},
+];
+
+var QUESTIONS = [
+  {q:"What is 3 × 4?",     a:"12",  w:["10","11","13"],       t:"maths",   e:"✖️"},
+  {q:"What is 5 × 6?",     a:"30",  w:["25","28","35"],       t:"maths",   e:"✖️"},
+  {q:"What is 7 × 8?",     a:"56",  w:["48","54","64"],       t:"maths",   e:"✖️"},
+  {q:"What is 4 × 9?",     a:"36",  w:["32","35","40"],       t:"maths",   e:"✖️"},
+  {q:"What is 6 × 7?",     a:"42",  w:["36","40","48"],       t:"maths",   e:"✖️"},
+  {q:"What is 8 × 8?",     a:"64",  w:["56","60","72"],       t:"maths",   e:"✖️"},
+  {q:"What is 9 × 3?",     a:"27",  w:["24","26","30"],       t:"maths",   e:"✖️"},
+  {q:"What is 12 × 4?",    a:"48",  w:["44","46","52"],       t:"maths",   e:"✖️"},
+  {q:"What is half of 20?",a:"10",  w:["8","12","15"],        t:"maths",   e:"➗"},
+  {q:"What is half of 36?",a:"18",  w:["16","20","22"],       t:"maths",   e:"➗"},
+  {q:"What is a quarter of 16?",a:"4",w:["2","6","8"],        t:"maths",   e:"➗"},
+  {q:"What is 15 + 27?",   a:"42",  w:["38","40","45"],       t:"maths",   e:"➕"},
+  {q:"What is 50 − 18?",   a:"32",  w:["28","30","34"],       t:"maths",   e:"➖"},
+  {q:"What is 100 − 45?",  a:"55",  w:["50","60","65"],       t:"maths",   e:"➖"},
+  {q:"Which is spelled correctly?",a:"beautiful",w:["beutiful","beautifull","beautyful"],t:"spelling",e:"✍️"},
+  {q:"Which is spelled correctly?",a:"because",  w:["becuase","becouse","becase"],      t:"spelling",e:"✍️"},
+  {q:"Which is spelled correctly?",a:"friend",   w:["freind","frend","friand"],         t:"spelling",e:"✍️"},
+  {q:"Which is spelled correctly?",a:"different",w:["diferent","diffrent","diferant"],  t:"spelling",e:"✍️"},
+  {q:"Which is spelled correctly?",a:"favourite",w:["favorit","favrite","favouirite"],  t:"spelling",e:"✍️"},
+  {q:"Which is spelled correctly?",a:"together", w:["togther","toogether","togeather"],  t:"spelling",e:"✍️"},
+  {q:"What word means the opposite of happy?",a:"sad",w:["glad","angry","tired"],       t:"spelling",e:"💭"},
+  {q:"What word means very big?",a:"enormous",   w:["tiny","medium","tall"],            t:"spelling",e:"💭"},
+  {q:"What is the capital of France?",   a:"Paris",    w:["London","Berlin","Rome"],        t:"geo",e:"🗺️"},
+  {q:"What is the capital of Japan?",    a:"Tokyo",    w:["Kyoto","Osaka","Hiroshima"],     t:"geo",e:"🗺️"},
+  {q:"What is the capital of Australia?",a:"Canberra", w:["Sydney","Melbourne","Brisbane"], t:"geo",e:"🗺️"},
+  {q:"What is the capital of Brazil?",   a:"Brasilia",  w:["Rio de Janeiro","Sao Paulo","Salvador"],t:"geo",e:"🗺️"},
+  {q:"Which is the biggest ocean?",      a:"Pacific",  w:["Atlantic","Indian","Arctic"],    t:"geo",e:"🌊"},
+  {q:"Which continent is Egypt in?",     a:"Africa",   w:["Asia","Europe","South America"], t:"geo",e:"🌍"},
+  {q:"How many continents are there?",   a:"7",        w:["5","6","8"],                     t:"geo",e:"🌎"},
+  {q:"Which country has the Eiffel Tower?",a:"France", w:["Italy","Spain","Germany"],       t:"geo",e:"🗼"},
+  {q:"What do plants need to grow?",     a:"Sunlight, water and soil",w:["Just water","Just sun","Sand and rain"],t:"science",e:"🌱"},
+  {q:"What is the closest star to Earth?",a:"The Sun", w:["The Moon","Mars","Sirius"],      t:"science",e:"⭐"},
+  {q:"What gas do we breathe to survive?",a:"Oxygen",  w:["Carbon dioxide","Nitrogen","Hydrogen"],t:"science",e:"💨"},
+  {q:"What do caterpillars turn into?",  a:"Butterflies",w:["Beetles","Moths","Dragonflies"],t:"science",e:"🦋"},
+  {q:"How many bones are in the human body?",a:"206",  w:["150","180","250"],               t:"science",e:"🦴"},
+  {q:"What force pulls things to the ground?",a:"Gravity",w:["Magnetism","Friction","Wind"],t:"science",e:"🍎"},
+  {q:"What is H2O?",                     a:"Water",    w:["Air","Sugar","Salt"],             t:"science",e:"💧"},
+  {q:"What is the hardest natural material?",a:"Diamond",w:["Gold","Iron","Ruby"],          t:"science",e:"💎"},
+];
+
+var TYPE_INFO = {
+  maths:  {bg:"#dbeafe",ac:"#3b82f6",lb:"Maths"},
+  spelling:{bg:"#fce7f3",ac:"#ec4899",lb:"Spelling"},
+  geo:    {bg:"#dcfce7",ac:"#10b981",lb:"Geography"},
+  science:{bg:"#fef9c3",ac:"#f59e0b",lb:"Science"},
+};
+
+var STICKERS = ["🌟","🦋","🌈","🎨","✂️","🌸","💎","🎀","🍭","🦄","🌺","⭐","🎉","💫","🌙","🎠","🍀","🌻","🐝","🦚"];
+var KEY = "bea-craft-v2";
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+var state = null;
+
+function loadState() {
+  try { var s = localStorage.getItem(KEY); if(s) state = JSON.parse(s); } catch(e){}
+}
+function saveState() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){}
+}
+function newGame(name) {
+  state = {name:name, screen:"world", stars:0, visited:[], crafts:[], stickers:[], country:null, streak:0};
+  saveState();
+}
+
+// ── RENDER ENGINE ─────────────────────────────────────────────────────────────
+function el(tag, props, children) {
+  var e = document.createElement(tag);
+  if (props) {
+    Object.keys(props).forEach(function(k) {
+      if (k === "style") { Object.assign(e.style, props[k]); }
+      else if (k === "class") { e.className = props[k]; }
+      else if (k.startsWith("on")) { e.addEventListener(k.slice(2).toLowerCase(), props[k]); }
+      else { e.setAttribute(k, props[k]); }
+    });
+  }
+  if (children) {
+    (Array.isArray(children) ? children : [children]).forEach(function(c) {
+      if (c == null) return;
+      if (typeof c === "string" || typeof c === "number") e.appendChild(document.createTextNode(c));
+      else e.appendChild(c);
+    });
+  }
+  return e;
+}
+
+function div(props, children) { return el("div", props, children); }
+function btn(props, children) { return el("button", props, children); }
+function span(props, children) { return el("span", props, children); }
+function inp(props) { return el("input", props); }
+function h(level, props, children) { return el("h"+level, props, children); }
+function p(props, children) { return el("p", props, children); }
+
+// ── BEA SVG AVATAR ────────────────────────────────────────────────────────────
+function beaAvatar(size) {
+  size = size || 80;
+  var s = document.createElementNS("http://www.w3.org/2000/svg","svg");
+  s.setAttribute("width",size); s.setAttribute("height",size); s.setAttribute("viewBox","0 0 80 80");
+  s.innerHTML = '<ellipse cx="40" cy="63" rx="18" ry="14" fill="#93c5fd"/>'
+    + '<circle cx="32" cy="62" r="3" fill="white" opacity="0.4"/>'
+    + '<circle cx="42" cy="66" r="2" fill="white" opacity="0.4"/>'
+    + '<circle cx="38" cy="58" r="2.5" fill="white" opacity="0.4"/>'
+    + '<ellipse cx="23" cy="58" rx="5" ry="9" fill="#93c5fd" transform="rotate(-15 23 58)"/>'
+    + '<ellipse cx="57" cy="58" rx="5" ry="9" fill="#93c5fd" transform="rotate(15 57 58)"/>'
+    + '<rect x="36" y="40" width="8" height="8" rx="3" fill="#fcd9b0"/>'
+    + '<ellipse cx="40" cy="31" rx="16" ry="17" fill="#fcd9b0"/>'
+    + '<ellipse cx="40" cy="20" rx="17" ry="11" fill="#5c3317"/>'
+    + '<rect x="23" y="19" width="6" height="24" rx="3" fill="#5c3317"/>'
+    + '<rect x="51" y="19" width="6" height="24" rx="3" fill="#5c3317"/>'
+    + '<ellipse cx="40" cy="16" rx="14" ry="7" fill="#6b3d20"/>'
+    + '<ellipse cx="34" cy="31" rx="3" ry="3.5" fill="white"/>'
+    + '<ellipse cx="46" cy="31" rx="3" ry="3.5" fill="white"/>'
+    + '<circle cx="34.5" cy="31.5" r="2" fill="#3a1a08"/>'
+    + '<circle cx="46.5" cy="31.5" r="2" fill="#3a1a08"/>'
+    + '<circle cx="35" cy="30.5" r="0.7" fill="white"/>'
+    + '<circle cx="47" cy="30.5" r="0.7" fill="white"/>'
+    + '<path d="M34 38 Q40 43 46 38" stroke="#e07070" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+    + '<circle cx="28" cy="35" r="4" fill="#f9a8d4" opacity="0.45"/>'
+    + '<circle cx="52" cy="35" r="4" fill="#f9a8d4" opacity="0.45"/>'
+    + '<rect x="52" y="53" width="14" height="13" rx="3" fill="#fbbf24"/>'
+    + '<rect x="53" y="49" width="12" height="6" rx="2" fill="#f59e0b"/>'
+    + '<text x="54" y="63" font-size="7">✂️</text>'
+    + '<ellipse cx="34" cy="75" rx="7" ry="4" fill="white" stroke="#e5e7eb" stroke-width="1"/>'
+    + '<ellipse cx="46" cy="75" rx="7" ry="4" fill="white" stroke="#e5e7eb" stroke-width="1"/>';
+  return s;
+}
+
+// ── CONFETTI ──────────────────────────────────────────────────────────────────
+function showConfetti() {
+  var container = div({style:{position:"fixed",inset:"0",pointerEvents:"none",zIndex:"999",overflow:"hidden"}});
+  var colors = ["#f472b6","#a855f7","#fbbf24","#34d399","#60a5fa","#fb923c"];
+  for(var i=0;i<24;i++){
+    (function(i){
+      var piece = div({style:{
+        position:"absolute", left:Math.random()*100+"%", top:"-20px",
+        width:(8+Math.random()*8)+"px", height:(8+Math.random()*8)+"px",
+        background:colors[i%6], borderRadius:"2px",
+        animation:"fall "+(1+Math.random()*0.5)+"s "+(Math.random()*0.4)+"s ease-in forwards"
+      }});
+      container.appendChild(piece);
+    })(i);
+  }
+  document.body.appendChild(container);
+  setTimeout(function(){ if(container.parentNode) container.parentNode.removeChild(container); }, 2500);
+}
+
+// ── SCREENS ──────────────────────────────────────────────────────────────────
+function renderSetup() {
+  var nameVal = "Bea";
+  var wrap = div({style:{minHeight:"100vh",background:"linear-gradient(135deg,#fce7f3,#f3e8ff,#dbeafe)",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}});
+  var inner = div({style:{maxWidth:"360px",width:"100%",textAlign:"center"}});
+
+  var title = div({style:{fontSize:"30px",fontWeight:"bold",color:"#7c3aed",marginBottom:"6px",lineHeight:"1.2"}}, "✨ Bea's Craft World ✨");
+  var sub = div({style:{fontSize:"14px",color:"#9a7ab0",marginBottom:"24px"}}, "Your magical learning adventure!");
+
+  var avatarWrap = div({style:{display:"flex",justifyContent:"center",marginBottom:"20px"}});
+  var ava = beaAvatar(100);
+  ava.style.animation = "float 3s ease-in-out infinite";
+  avatarWrap.appendChild(ava);
+
+  var card = div({style:{background:"white",borderRadius:"16px",padding:"20px",boxShadow:"0 4px 20px rgba(168,85,247,0.15)",marginBottom:"16px"}});
+  var lbl = div({style:{fontSize:"12px",color:"#9a7ab0",marginBottom:"8px",textTransform:"uppercase",letterSpacing:"0.1em"}}, "Your Name");
+  var input = inp({style:{width:"100%",padding:"12px 16px",borderRadius:"12px",border:"2px solid #a855f7",fontSize:"18px",textAlign:"center",outline:"none",color:"#3a2a4a"},value:nameVal});
+  input.addEventListener("input", function(){ nameVal = input.value; });
+  card.appendChild(lbl); card.appendChild(input);
+
+  var startBtn = btn({style:{width:"100%",padding:"16px",background:"linear-gradient(135deg,#a855f7,#f472b6)",color:"white",border:"none",borderRadius:"16px",fontSize:"18px",fontWeight:"bold",boxShadow:"0 4px 15px rgba(168,85,247,0.4)"}}, "🚀 Start Adventure!");
+  startBtn.addEventListener("click", function(){
+    if(nameVal.trim()) { newGame(nameVal.trim()); render(); }
+  });
+
+  var hint = div({style:{marginTop:"14px",fontSize:"12px",color:"#9a7ab0"}}, "Answer questions · Earn stars · Unlock the world 🌍");
+
+  inner.appendChild(title); inner.appendChild(sub); inner.appendChild(avatarWrap);
+  inner.appendChild(card); inner.appendChild(startBtn); inner.appendChild(hint);
+  wrap.appendChild(inner);
+  return wrap;
+}
+
+function renderHeader() {
+  var nextC = COUNTRIES.filter(function(c){ return c.need > state.stars; })[0];
+  var wrap = div({style:{background:"linear-gradient(135deg,#a855f7,#f472b6)"}});
+
+  var top = div({style:{padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}});
+  var left = div({style:{display:"flex",alignItems:"center",gap:"10px"}});
+  var ava = beaAvatar(44);
+  var info = div({style:{}}, [
+    div({style:{fontSize:"15px",fontWeight:"bold",color:"white"}}, state.name+"'s World"),
+    div({style:{fontSize:"11px",color:"rgba(255,255,255,0.8)"}}, state.crafts.length+" crafts · "+state.stickers.length+" stickers"),
+  ]);
+  left.appendChild(ava); left.appendChild(info);
+
+  var starBox = div({style:{textAlign:"center"}}, [
+    div({style:{fontSize:"22px",fontWeight:"bold",color:"#fbbf24"}}, "⭐ "+state.stars),
+    div({style:{fontSize:"10px",color:"rgba(255,255,255,0.8)"}}, "stars"),
+  ]);
+  top.appendChild(left); top.appendChild(starBox);
+
+  wrap.appendChild(top);
+
+  if(nextC) {
+    var prev = COUNTRIES.filter(function(c){ return c.need <= state.stars; });
+    var prevStars = prev.length ? prev[prev.length-1].need : 0;
+    var pct = Math.min(100, ((state.stars - prevStars) / (nextC.need - prevStars)) * 100);
+    var bar = div({style:{padding:"6px 16px 10px",background:"rgba(255,255,255,0.15)"}}, [
+      div({style:{display:"flex",justifyContent:"space-between",fontSize:"10px",color:"rgba(255,255,255,0.85)",marginBottom:"4px"}}, [
+        span({},"Next: "+nextC.flag+" "+nextC.name),
+        span({},state.stars+"/"+nextC.need+" ⭐"),
+      ]),
+      div({style:{height:"5px",background:"rgba(255,255,255,0.3)",borderRadius:"3px",overflow:"hidden"}}, [
+        div({style:{height:"100%",width:pct+"%",background:"white",borderRadius:"3px",transition:"width 0.5s"}}),
+      ]),
+    ]);
+    wrap.appendChild(bar);
+  }
+  return wrap;
+}
+
+function renderTabs() {
+  var tabs = [["world","🗺️ World"],["craft","✂️ Craft"]];
+  var wrap = div({style:{display:"flex",background:"white",borderBottom:"2px solid #f3e8ff"}});
+  tabs.forEach(function(t){
+    var active = state.screen === t[0];
+    var b = btn({
+      style:{flex:"1",padding:"12px 0",background:"transparent",border:"none",
+        borderBottom:active?"3px solid #a855f7":"3px solid transparent",
+        fontSize:"13px",fontWeight:active?"bold":"normal",color:active?"#a855f7":"#9a7ab0"}
+    }, t[1]);
+    b.addEventListener("click", function(){ state.screen = t[0]; saveState(); render(); });
+    wrap.appendChild(b);
+  });
+  return wrap;
+}
+
+function renderWorld() {
+  var wrap = div({style:{padding:"16px"}});
+  var hint = div({style:{fontSize:"13px",color:"#9a7ab0",textAlign:"center",marginBottom:"14px"}}, "Tap a country to answer questions and earn stars! 🗺️");
+  var grid = div({style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}});
+
+  COUNTRIES.forEach(function(c){
+    var unlocked = state.stars >= c.need;
+    var visited = state.visited.indexOf(c.id) >= 0;
+    var crafted = state.crafts.indexOf(c.id) >= 0;
+
+    var card = btn({
+      style:{background:unlocked?c.color:"#f0f0f0",
+        border:crafted?"3px solid #34d399":visited?"3px solid #fbbf24":"2px solid "+(unlocked?"transparent":"#ddd"),
+        borderRadius:"16px",padding:"14px 10px",textAlign:"center",
+        opacity:unlocked?"1":"0.6",cursor:unlocked?"pointer":"default",
+        position:"relative",boxShadow:unlocked?"0 4px 12px rgba(0,0,0,0.08)":"none",width:"100%"}
+    }, [
+      unlocked ? null : div({style:{position:"absolute",top:"6px",right:"8px",fontSize:"10px",color:"#aaa"}}, "🔒"+c.need+"⭐"),
+      crafted ? div({style:{position:"absolute",top:"6px",right:"8px",fontSize:"14px"}},"✅") : null,
+      div({style:{fontSize:"28px",marginBottom:"4px"}}, c.flag),
+      div({style:{fontSize:"12px",fontWeight:"bold",color:"#3a2a4a"}}, c.name),
+      div({style:{fontSize:"10px",color:"#9a7ab0",marginTop:"2px"}}, c.icon+" "+c.craft),
+    ]);
+
+    if(unlocked) {
+      card.addEventListener("click", function(){
+        state.screen = "quiz";
+        state.country = c.id;
+        state.currentQ = pickQuestion();
+        state.answered = false;
+        state.selectedAnswer = null;
+        saveState();
+        render();
+      });
+    }
+    grid.appendChild(card);
+  });
+
+  wrap.appendChild(hint);
+  wrap.appendChild(grid);
+
+  if(state.stickers.length > 0) {
+    var stickerBox = div({style:{marginTop:"20px",background:"white",borderRadius:"16px",padding:"14px",boxShadow:"0 4px 12px rgba(0,0,0,0.06)"}}, [
+      div({style:{fontSize:"11px",color:"#9a7ab0",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"8px"}}, "My Sticker Collection"),
+      div({style:{display:"flex",flexWrap:"wrap",gap:"6px"}},
+        state.stickers.map(function(s){ return span({style:{fontSize:"22px"}},s); })
+      ),
+    ]);
+    wrap.appendChild(stickerBox);
+  }
+  return wrap;
+}
+
+function pickQuestion() {
+  return Math.floor(Math.random() * QUESTIONS.length);
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; }
+  return a;
+}
+
+function renderQuiz() {
+  var country = COUNTRIES.filter(function(c){ return c.id === state.country; })[0];
+  if(!country) { state.screen="world"; render(); return div({}); }
+
+  var q = QUESTIONS[state.currentQ || 0];
+  var ti = TYPE_INFO[q.t];
+
+  if(!state.options) {
+    state.options = shuffle([q.a].concat(q.w));
+    saveState();
+  }
+
+  var wrap = div({style:{padding:"16px"},class:"fadein"});
+
+  // Country header
+  wrap.appendChild(div({style:{background:country.color,borderRadius:"16px",padding:"14px",marginBottom:"14px",textAlign:"center"}}, [
+    div({style:{fontSize:"32px"}}, country.flag),
+    div({style:{fontSize:"16px",fontWeight:"bold",color:"#3a2a4a"}}, country.name),
+    div({style:{fontSize:"12px",color:"#9a7ab0"}}, "Earn stars to make your "+country.icon+" "+country.craft+"!"),
+  ]));
+
+  // Streak
+  if((state.streak||0) >= 2) {
+    wrap.appendChild(div({style:{background:"linear-gradient(135deg,#fbbf24,#fb923c)",borderRadius:"12px",padding:"8px 14px",marginBottom:"12px",textAlign:"center",color:"white",fontWeight:"bold",fontSize:"13px"}},
+      "🔥 "+state.streak+" in a row! Bonus star!"
+    ));
+  }
+
+  // Question
+  var qcard = div({style:{background:"white",borderRadius:"20px",padding:"20px",boxShadow:"0 6px 20px rgba(0,0,0,0.08)",marginBottom:"14px"}});
+  qcard.appendChild(div({style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"12px"}}, [
+    div({style:{background:ti.bg,color:ti.ac,borderRadius:"8px",padding:"4px 10px",fontSize:"11px",fontWeight:"bold"}}, ti.lb),
+  ]));
+  qcard.appendChild(div({style:{fontSize:"18px",fontWeight:"bold",color:"#3a2a4a",lineHeight:"1.4",marginBottom:"16px"}}, q.e+" "+q.q));
+
+  // Options
+  var optWrap = div({style:{display:"flex",flexDirection:"column",gap:"10px"}});
+  state.options.forEach(function(opt){
+    var correct = opt === q.a;
+    var chosen = opt === state.selectedAnswer;
+    var bg="white", border="2px solid #e5e7eb", color="#3a2a4a", prefix="";
+    if(state.answered) {
+      if(correct) { bg="#dcfce7"; border="2px solid #34d399"; color="#166534"; prefix="✅ "; }
+      else if(chosen) { bg="#fee2e2"; border="2px solid #ef4444"; color="#991b1b"; prefix="❌ "; }
+    }
+    var b = btn({style:{padding:"12px 16px",borderRadius:"12px",border:border,background:bg,color:color,fontSize:"15px",textAlign:"left",width:"100%"}}, prefix+opt);
+    if(!state.answered) {
+      b.addEventListener("click", function(){
+        state.selectedAnswer = opt;
+        state.answered = true;
+        saveState();
+        render();
+      });
+    }
+    optWrap.appendChild(b);
+  });
+  qcard.appendChild(optWrap);
+
+  // Fact reveal
+  if(state.answered && state.selectedAnswer === q.a) {
+    var fact = div({style:{marginTop:"14px",background:"linear-gradient(135deg,#f3e8ff,#fce7f3)",borderRadius:"12px",padding:"14px",animation:"pop 0.4s ease-out"},class:"pop"}, [
+      div({style:{fontSize:"12px",color:"#7c3aed",fontWeight:"bold",marginBottom:"4px"}}, "🌍 Did you know?"),
+      div({style:{fontSize:"13px",color:"#3a2a4a",lineHeight:"1.5"}}, country.fact),
+    ]);
+    qcard.appendChild(fact);
+  }
+  wrap.appendChild(qcard);
+
+  // Action button
+  if(state.answered) {
+    var correct2 = state.selectedAnswer === q.a;
+    var actionBtn = btn({
+      style:{width:"100%",padding:"14px",background:correct2?"linear-gradient(135deg,#a855f7,#f472b6)":"linear-gradient(135deg,#6b7280,#4b5563)",
+        color:"white",border:"none",borderRadius:"14px",fontSize:"16px",fontWeight:"bold",
+        boxShadow:correct2?"0 4px 12px rgba(168,85,247,0.3)":"none",marginBottom:"10px"}
+    }, correct2 ? "🌟 Collect Star!" : "Try Another Question →");
+
+    actionBtn.addEventListener("click", function(){
+      if(correct2) {
+        // Award star + sticker
+        var bonus = (state.streak||0) >= 2 ? 1 : 0;
+        state.stars += 1 + bonus;
+        state.streak = (state.streak||0) + 1;
+        var sticker = STICKERS[Math.floor(Math.random()*STICKERS.length)];
+        state.stickers.push(sticker);
+        if(!state.visited || state.visited.indexOf(state.country)<0) state.visited.push(state.country);
+        state.screen = "world";
+        state.answered = false;
+        state.selectedAnswer = null;
+        state.options = null;
+        saveState();
+        showConfetti();
+        render();
+      } else {
+        state.streak = 0;
+        state.currentQ = pickQuestion();
+        state.answered = false;
+        state.selectedAnswer = null;
+        state.options = null;
+        saveState();
+        render();
+      }
+    });
+    wrap.appendChild(actionBtn);
+  }
+
+  var backBtn = btn({style:{width:"100%",padding:"10px",background:"transparent",border:"2px solid #e5e7eb",borderRadius:"12px",fontSize:"14px",color:"#9a7ab0"}}, "← Back to Map");
+  backBtn.addEventListener("click", function(){ state.screen="world"; state.options=null; saveState(); render(); });
+  wrap.appendChild(backBtn);
+  return wrap;
+}
+
+function renderCraft() {
+  var wrap = div({style:{padding:"16px"}});
+  var available = COUNTRIES.filter(function(c){ return state.stars>=c.need && state.visited.indexOf(c.id)>=0 && state.crafts.indexOf(c.id)<0; });
+  var completed = COUNTRIES.filter(function(c){ return state.crafts.indexOf(c.id)>=0; });
+
+  if(available.length===0 && completed.length===0) {
+    wrap.appendChild(div({style:{background:"white",borderRadius:"16px",padding:"24px",textAlign:"center",boxShadow:"0 4px 12px rgba(0,0,0,0.06)"}}, [
+      div({style:{fontSize:"40px",marginBottom:"12px"}}, "🗺️"),
+      div({style:{fontSize:"15px",fontWeight:"bold",color:"#3a2a4a",marginBottom:"8px"}}, "Visit Countries First!"),
+      div({style:{fontSize:"13px",color:"#9a7ab0"}}, "Answer questions on the World Map to earn craft materials."),
+    ]));
+  }
+
+  if(available.length > 0) {
+    wrap.appendChild(div({style:{fontSize:"13px",fontWeight:"bold",color:"#7c3aed",marginBottom:"10px"}}, "Ready to Make! 🎨"));
+    available.forEach(function(c){
+      var b = btn({style:{width:"100%",background:c.color,border:"2px solid rgba(168,85,247,0.2)",borderRadius:"16px",padding:"16px",marginBottom:"10px",textAlign:"left",display:"flex",alignItems:"center",gap:"12px"}});
+      b.style.flexDirection = "row";
+
+      var icon = div({style:{fontSize:"36px"}}, c.icon);
+      var info = div({style:{flex:"1"}}, [
+        div({style:{fontSize:"15px",fontWeight:"bold",color:"#3a2a4a"}}, c.craft),
+        div({style:{fontSize:"12px",color:"#9a7ab0"}}, "from "+c.name+" "+c.flag),
+      ]);
+      var scissors = div({style:{fontSize:"22px",marginLeft:"auto"}}, "✂️");
+      b.appendChild(icon); b.appendChild(info); b.appendChild(scissors);
+
+      b.addEventListener("click", function(){
+        renderMaking(c);
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  if(completed.length > 0) {
+    wrap.appendChild(div({style:{fontSize:"13px",fontWeight:"bold",color:"#34d399",marginBottom:"10px",marginTop:"10px"}}, "My Craft Gallery ✅"));
+    var grid = div({style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}});
+    completed.forEach(function(c){
+      grid.appendChild(div({style:{background:c.color,borderRadius:"14px",padding:"14px",textAlign:"center",border:"2px solid #34d399"}}, [
+        div({style:{fontSize:"32px"}}, c.icon),
+        div({style:{fontSize:"11px",fontWeight:"bold",color:"#3a2a4a",marginTop:"4px"}}, c.craft),
+        div({style:{fontSize:"10px",color:"#9a7ab0"}}, c.flag),
+      ]));
+    });
+    wrap.appendChild(grid);
+  }
+  return wrap;
+}
+
+function renderMaking(country) {
+  var app = document.getElementById("app");
+  app.innerHTML = "";
+
+  var screen = div({style:{minHeight:"100vh",background:"linear-gradient(135deg,#fce7f3,#f3e8ff)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"20px",textAlign:"center"}});
+  var spinner = div({style:{fontSize:"60px",marginBottom:"20px"},class:"spin"}, "✂️");
+  var title = div({style:{fontSize:"20px",fontWeight:"bold",color:"#7c3aed",marginBottom:"8px"}}, "Making your "+country.craft+"...");
+  var sub = div({style:{fontSize:"14px",color:"#9a7ab0"}}, "Snip snip! Almost ready! ✨");
+  screen.appendChild(spinner); screen.appendChild(title); screen.appendChild(sub);
+  app.appendChild(screen);
+
+  setTimeout(function(){
+    app.innerHTML = "";
+    showConfetti();
+    var done = div({style:{minHeight:"100vh",background:"linear-gradient(135deg,#fce7f3,#f3e8ff)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"20px",textAlign:"center"}});
+    var big = div({style:{fontSize:"80px",marginBottom:"16px"},class:"bounce"}, country.icon);
+    var t2 = div({style:{fontSize:"22px",fontWeight:"bold",color:"#7c3aed",marginBottom:"10px"}}, "Your "+country.craft+" is done! 🎉");
+    var desc = div({style:{fontSize:"14px",color:"#9a7ab0",marginBottom:"24px",lineHeight:"1.6"}}, "Amazing work! You created a beautiful "+country.craft+" and learned all about "+country.name+"!");
+    var addBtn = btn({style:{padding:"14px 28px",background:"linear-gradient(135deg,#34d399,#059669)",color:"white",border:"none",borderRadius:"14px",fontSize:"16px",fontWeight:"bold"}}, "✅ Add to My Gallery!");
+    addBtn.addEventListener("click", function(){
+      state.crafts.push(country.id);
+      saveState();
+      render();
+    });
+    done.appendChild(big); done.appendChild(t2); done.appendChild(desc); done.appendChild(addBtn);
+    app.appendChild(done);
+  }, 2200);
+}
+
+// ── MAIN RENDER ───────────────────────────────────────────────────────────────
+function render() {
+  var app = document.getElementById("app");
+  app.innerHTML = "";
+
+  if(!state) {
+    app.appendChild(renderSetup());
+    return;
+  }
+
+  var wrapper = div({style:{minHeight:"100vh",background:"linear-gradient(180deg,#fce7f3 0%,#fef6ff 100%)"}});
+  wrapper.appendChild(renderHeader());
+  wrapper.appendChild(renderTabs());
+
+  var body = div({style:{paddingBottom:"24px"}});
+  if(state.screen === "world") body.appendChild(renderWorld());
+  else if(state.screen === "quiz") body.appendChild(renderQuiz());
+  else if(state.screen === "craft") body.appendChild(renderCraft());
+  wrapper.appendChild(body);
+
+  // Reset button
+  var reset = btn({style:{display:"block",margin:"0 auto 16px",background:"none",border:"none",fontSize:"10px",color:"#ddd"}}, "reset game");
+  reset.addEventListener("click", function(){
+    if(confirm("Start a new game? This will erase all progress!")) {
+      localStorage.removeItem(KEY);
+      state = null;
+      render();
+    }
+  });
+  wrapper.appendChild(reset);
+  app.appendChild(wrapper);
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+loadState();
+render();
+</script>
+</body>
+</html>
