@@ -6,402 +6,158 @@
 <title>Bea's Craft World</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
-
   :root {
-    --pink: #FF6B9D;
-    --purple: #9B59B6;
-    --teal: #1ABC9C;
-    --yellow: #F1C40F;
-    --orange: #FF8C42;
-    --blue: #3498DB;
-    --light-bg: #FFF9FE;
-    --card-bg: #FFFFFF;
-    --text: #2C2C54;
-    --muted: #888;
-    --radius: 18px;
-    --shadow: 0 4px 20px rgba(0,0,0,0.10);
+    --pink:#FF6B9D;--purple:#9B59B6;--teal:#1ABC9C;--yellow:#F1C40F;
+    --orange:#FF8C42;--blue:#3498DB;--light-bg:#FFF9FE;--card-bg:#FFFFFF;
+    --text:#2C2C54;--muted:#888;--radius:18px;--shadow:0 4px 20px rgba(0,0,0,0.10);
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--light-bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* ── HEADER ── */
-  .header {
-    background: linear-gradient(135deg, var(--pink), var(--purple));
-    padding: 18px 20px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 12px rgba(155,89,182,0.3);
-  }
-  .header-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.5rem;
-    color: white;
-    letter-spacing: 0.5px;
-  }
-  .streak-badge {
-    background: rgba(255,255,255,0.25);
-    border-radius: 30px;
-    padding: 6px 14px;
-    color: white;
-    font-weight: 800;
-    font-size: 0.9rem;
-    display: flex; align-items: center; gap: 5px;
-  }
-
-  /* ── LEVEL BAR ── */
-  .level-bar-wrap {
-    background: linear-gradient(135deg, #f8e8ff, #e8f4ff);
-    padding: 12px 20px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .level-label {
-    font-weight: 800; color: var(--purple); font-size: 0.85rem; white-space: nowrap;
-  }
-  .xp-bar-outer {
-    flex: 1; height: 12px; background: #ddd; border-radius: 10px; overflow: hidden;
-  }
-  .xp-bar-inner {
-    height: 100%;
-    background: linear-gradient(90deg, var(--teal), var(--blue));
-    border-radius: 10px;
-    transition: width 0.5s ease;
-  }
-  .xp-label { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
-
-  /* ── SCREENS ── */
-  .screen { display: none; padding: 20px; max-width: 500px; margin: 0 auto; }
-  .screen.active { display: block; }
-
-  /* ── HOME ── */
-  .welcome-msg {
-    text-align: center;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.6rem;
-    color: var(--purple);
-    margin: 10px 0 6px;
-  }
-  .welcome-sub { text-align: center; color: var(--muted); font-size: 0.95rem; margin-bottom: 20px; }
-
-  .subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
-  .subject-card {
-    border-radius: var(--radius);
-    padding: 20px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-    box-shadow: var(--shadow);
-    color: white;
-    user-select: none;
-  }
-  .subject-card:active { transform: scale(0.96); }
-  .subject-card .icon { font-size: 2.2rem; margin-bottom: 6px; }
-  .subject-card .name { font-weight: 800; font-size: 1rem; }
-  .subject-card .count { font-size: 0.75rem; opacity: 0.85; margin-top: 2px; }
-  .card-maths { background: linear-gradient(135deg, #FF6B9D, #FF8C42); }
-  .card-spelling { background: linear-gradient(135deg, #9B59B6, #3498DB); }
-  .card-geography { background: linear-gradient(135deg, #1ABC9C, #3498DB); }
-  .card-science { background: linear-gradient(135deg, #F1C40F, #FF8C42); }
-
-  .crafts-btn {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--pink), var(--orange));
-    border: none; border-radius: var(--radius);
-    color: white; font-family: 'Fredoka One', cursive;
-    font-size: 1.3rem; cursor: pointer;
-    box-shadow: var(--shadow);
-    transition: transform 0.15s;
-    margin-bottom: 14px;
-  }
-  .crafts-btn:active { transform: scale(0.97); }
-
-  .stats-row {
-    display: flex; gap: 10px;
-  }
-  .stat-card {
-    flex: 1; background: var(--card-bg); border-radius: var(--radius);
-    padding: 14px 10px; text-align: center; box-shadow: var(--shadow);
-  }
-  .stat-card .stat-val { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--purple); }
-  .stat-card .stat-lbl { font-size: 0.72rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-
-  /* ── QUIZ ── */
-  .quiz-header {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
-  }
-  .back-btn {
-    background: white; border: none; border-radius: 50%;
-    width: 38px; height: 38px; font-size: 1.2rem;
-    cursor: pointer; box-shadow: var(--shadow); flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .quiz-subject-label {
-    font-weight: 800; font-size: 1rem; color: var(--purple);
-  }
-  .progress-outer {
-    flex: 1; height: 8px; background: #eee; border-radius: 10px; overflow: hidden;
-  }
-  .progress-inner {
-    height: 100%;
-    background: linear-gradient(90deg, var(--pink), var(--purple));
-    border-radius: 10px;
-    transition: width 0.4s ease;
-  }
-
-  .question-card {
-    background: var(--card-bg); border-radius: var(--radius);
-    padding: 22px 20px; margin-bottom: 16px;
-    box-shadow: var(--shadow);
-  }
-  .question-num { font-size: 0.78rem; color: var(--muted); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
-  .question-text { font-size: 1.1rem; font-weight: 700; line-height: 1.4; }
-
-  .options-list { display: flex; flex-direction: column; gap: 10px; }
-  .option-btn {
-    background: white; border: 2.5px solid #E8E8E8;
-    border-radius: 14px; padding: 14px 18px;
-    font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 700;
-    text-align: left; cursor: pointer; transition: all 0.15s;
-    color: var(--text);
-  }
-  .option-btn:active { transform: scale(0.98); }
-  .option-btn.correct { background: #D5F5E3; border-color: #27AE60; color: #1E8449; }
-  .option-btn.wrong { background: #FADBD8; border-color: #E74C3C; color: #C0392B; }
-  .option-btn.disabled { pointer-events: none; }
-
-  .feedback-msg {
-    text-align: center; padding: 14px;
-    font-weight: 800; font-size: 1.1rem; border-radius: var(--radius);
-    margin-bottom: 14px; display: none;
-  }
-  .feedback-msg.correct { background: #D5F5E3; color: #1E8449; }
-  .feedback-msg.wrong { background: #FADBD8; color: #C0392B; }
-
-  .next-btn {
-    width: 100%; padding: 16px;
-    background: linear-gradient(135deg, var(--purple), var(--pink));
-    border: none; border-radius: var(--radius);
-    color: white; font-family: 'Fredoka One', cursive;
-    font-size: 1.2rem; cursor: pointer; display: none;
-    box-shadow: var(--shadow);
-  }
-
-  /* ── RESULTS ── */
-  .results-card {
-    background: var(--card-bg); border-radius: var(--radius);
-    padding: 28px 20px; text-align: center; box-shadow: var(--shadow);
-    margin-bottom: 16px;
-  }
-  .results-emoji { font-size: 3.5rem; margin-bottom: 10px; }
-  .results-title { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--purple); margin-bottom: 6px; }
-  .results-score { font-size: 1rem; color: var(--muted); margin-bottom: 16px; }
-  .xp-gained { background: linear-gradient(135deg, var(--teal), var(--blue)); color: white;
-    border-radius: 30px; padding: 8px 20px; display: inline-block; font-weight: 800; font-size: 1rem; margin-bottom: 16px; }
-  .results-actions { display: flex; gap: 10px; }
-  .results-actions button {
-    flex: 1; padding: 14px; border: none; border-radius: 14px;
-    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem;
-    cursor: pointer;
-  }
-  .btn-again { background: var(--yellow); color: var(--text); }
-  .btn-home { background: var(--purple); color: white; }
-
-  /* ── COUNTRIES / CRAFTS ── */
-  .section-title {
-    font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--purple);
-    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
-  }
-  .countries-grid { display: flex; flex-direction: column; gap: 12px; }
-  .country-card {
-    background: var(--card-bg); border-radius: var(--radius);
-    padding: 16px 18px; box-shadow: var(--shadow);
-    display: flex; align-items: center; gap: 14px;
-    cursor: pointer; transition: transform 0.15s;
-    border: 2.5px solid transparent;
-  }
-  .country-card:active { transform: scale(0.98); }
-  .country-card.locked { opacity: 0.5; cursor: default; }
-  .country-card.locked:active { transform: none; }
-  .country-card.unlocked { border-color: var(--teal); }
-  .country-flag { font-size: 2rem; flex-shrink: 0; }
-  .country-info { flex: 1; }
-  .country-name { font-weight: 800; font-size: 1rem; }
-  .country-status { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
-  .country-lock { font-size: 1.3rem; flex-shrink: 0; }
-
-  /* ── CRAFT TUTORIAL ── */
-  .craft-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
-  .craft-title { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--purple); }
-
-  .craft-materials {
-    background: #FFF3CD; border-radius: var(--radius);
-    padding: 16px 18px; margin-bottom: 16px;
-    border-left: 4px solid var(--yellow);
-  }
-  .craft-materials h3 { font-weight: 800; margin-bottom: 8px; color: var(--orange); font-size: 0.95rem; }
-  .craft-materials ul { padding-left: 18px; }
-  .craft-materials li { font-size: 0.9rem; margin-bottom: 4px; font-weight: 600; }
-
-  .craft-steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
-  .craft-step {
-    background: var(--card-bg); border-radius: var(--radius);
-    padding: 16px 18px; box-shadow: var(--shadow);
-    display: flex; gap: 14px; align-items: flex-start;
-    border-left: 4px solid var(--pink);
-    opacity: 0.45; transition: opacity 0.3s;
-  }
-  .craft-step.active { opacity: 1; border-left-color: var(--purple); }
-  .craft-step.done { opacity: 1; border-left-color: var(--teal); background: #f0fff8; }
-  .step-num {
-    background: var(--purple); color: white;
-    border-radius: 50%; width: 30px; height: 30px; min-width: 30px;
-    font-weight: 900; font-size: 0.9rem;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .craft-step.done .step-num { background: var(--teal); }
-  .step-text { font-size: 0.95rem; font-weight: 600; line-height: 1.5; padding-top: 3px; }
-
-  .craft-step-nav {
-    display: flex; gap: 10px; margin-bottom: 16px;
-  }
-  .craft-step-nav button {
-    flex: 1; padding: 14px; border: none; border-radius: 14px;
-    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem;
-    cursor: pointer;
-  }
-  .btn-prev-step { background: #eee; color: var(--text); }
-  .btn-next-step { background: linear-gradient(135deg, var(--purple), var(--pink)); color: white; }
-  .btn-done-craft { background: linear-gradient(135deg, var(--teal), var(--blue)); color: white; width: 100%; padding: 16px;
-    border: none; border-radius: var(--radius); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.1rem; cursor: pointer; display: none; }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    background: var(--text); color: white; padding: 12px 24px;
-    border-radius: 30px; font-weight: 700; font-size: 0.95rem;
-    z-index: 999; opacity: 0; transition: opacity 0.3s;
-    pointer-events: none; white-space: nowrap;
-  }
-  .toast.show { opacity: 1; }
-
-  /* ── UNLOCK MODAL ── */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    z-index: 200; display: none; align-items: center; justify-content: center;
-    padding: 20px;
-  }
-  .modal-overlay.show { display: flex; }
-  .modal-box {
-    background: white; border-radius: 24px; padding: 28px 22px;
-    text-align: center; max-width: 340px; width: 100%;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
-  }
-  .modal-emoji { font-size: 3rem; margin-bottom: 10px; }
-  .modal-title { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--purple); margin-bottom: 8px; }
-  .modal-text { font-size: 0.95rem; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
-  .modal-btn {
-    width: 100%; padding: 14px; background: linear-gradient(135deg, var(--purple), var(--pink));
-    border: none; border-radius: 14px; color: white;
-    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem; cursor: pointer;
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--light-bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+  .header{background:linear-gradient(135deg,var(--pink),var(--purple));padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(155,89,182,0.3);}
+  .header-title{font-family:'Fredoka One',cursive;font-size:1.5rem;color:white;letter-spacing:0.5px;}
+  .streak-badge{background:rgba(255,255,255,0.25);border-radius:30px;padding:6px 14px;color:white;font-weight:800;font-size:0.9rem;display:flex;align-items:center;gap:5px;}
+  .level-bar-wrap{background:linear-gradient(135deg,#f8e8ff,#e8f4ff);padding:12px 20px;display:flex;align-items:center;gap:12px;}
+  .level-label{font-weight:800;color:var(--purple);font-size:0.85rem;white-space:nowrap;}
+  .xp-bar-outer{flex:1;height:12px;background:#ddd;border-radius:10px;overflow:hidden;}
+  .xp-bar-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:10px;transition:width 0.5s ease;}
+  .xp-label{font-size:0.75rem;color:var(--muted);white-space:nowrap;}
+  .screen{display:none;padding:20px;max-width:500px;margin:0 auto;}
+  .screen.active{display:block;}
+  .welcome-msg{text-align:center;font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--purple);margin:10px 0 6px;}
+  .welcome-sub{text-align:center;color:var(--muted);font-size:0.95rem;margin-bottom:20px;}
+  .subject-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+  .subject-card{border-radius:var(--radius);padding:20px 16px;text-align:center;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;box-shadow:var(--shadow);color:white;user-select:none;}
+  .subject-card:active{transform:scale(0.96);}
+  .subject-card .icon{font-size:2.2rem;margin-bottom:6px;}
+  .subject-card .name{font-weight:800;font-size:1rem;}
+  .subject-card .count{font-size:0.75rem;opacity:0.85;margin-top:2px;}
+  .card-maths{background:linear-gradient(135deg,#FF6B9D,#FF8C42);}
+  .card-spelling{background:linear-gradient(135deg,#9B59B6,#3498DB);}
+  .card-geography{background:linear-gradient(135deg,#1ABC9C,#3498DB);}
+  .card-science{background:linear-gradient(135deg,#F1C40F,#FF8C42);}
+  .crafts-btn{width:100%;padding:18px;background:linear-gradient(135deg,var(--pink),var(--orange));border:none;border-radius:var(--radius);color:white;font-family:'Fredoka One',cursive;font-size:1.3rem;cursor:pointer;box-shadow:var(--shadow);transition:transform 0.15s;margin-bottom:14px;}
+  .crafts-btn:active{transform:scale(0.97);}
+  .stats-row{display:flex;gap:10px;}
+  .stat-card{flex:1;background:var(--card-bg);border-radius:var(--radius);padding:14px 10px;text-align:center;box-shadow:var(--shadow);}
+  .stat-card .stat-val{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--purple);}
+  .stat-card .stat-lbl{font-size:0.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+  .quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+  .back-btn{background:white;border:none;border-radius:50%;width:38px;height:38px;font-size:1.2rem;cursor:pointer;box-shadow:var(--shadow);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .quiz-subject-label{font-weight:800;font-size:1rem;color:var(--purple);}
+  .progress-outer{flex:1;height:8px;background:#eee;border-radius:10px;overflow:hidden;}
+  .progress-inner{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple));border-radius:10px;transition:width 0.4s ease;}
+  .question-card{background:var(--card-bg);border-radius:var(--radius);padding:22px 20px;margin-bottom:16px;box-shadow:var(--shadow);}
+  .question-num{font-size:0.78rem;color:var(--muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;}
+  .question-text{font-size:1.1rem;font-weight:700;line-height:1.4;}
+  .options-list{display:flex;flex-direction:column;gap:10px;}
+  .option-btn{background:white;border:2.5px solid #E8E8E8;border-radius:14px;padding:14px 18px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;text-align:left;cursor:pointer;transition:all 0.15s;color:var(--text);}
+  .option-btn:active{transform:scale(0.98);}
+  .option-btn.correct{background:#D5F5E3;border-color:#27AE60;color:#1E8449;}
+  .option-btn.wrong{background:#FADBD8;border-color:#E74C3C;color:#C0392B;}
+  .option-btn.disabled{pointer-events:none;}
+  .feedback-msg{text-align:center;padding:14px;font-weight:800;font-size:1.1rem;border-radius:var(--radius);margin-bottom:14px;display:none;}
+  .feedback-msg.correct{background:#D5F5E3;color:#1E8449;}
+  .feedback-msg.wrong{background:#FADBD8;color:#C0392B;}
+  .next-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--purple),var(--pink));border:none;border-radius:var(--radius);color:white;font-family:'Fredoka One',cursive;font-size:1.2rem;cursor:pointer;display:none;box-shadow:var(--shadow);}
+  .results-card{background:var(--card-bg);border-radius:var(--radius);padding:28px 20px;text-align:center;box-shadow:var(--shadow);margin-bottom:16px;}
+  .results-emoji{font-size:3.5rem;margin-bottom:10px;}
+  .results-title{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--purple);margin-bottom:6px;}
+  .results-score{font-size:1rem;color:var(--muted);margin-bottom:16px;}
+  .xp-gained{background:linear-gradient(135deg,var(--teal),var(--blue));color:white;border-radius:30px;padding:8px 20px;display:inline-block;font-weight:800;font-size:1rem;margin-bottom:16px;}
+  .results-actions{display:flex;gap:10px;}
+  .results-actions button{flex:1;padding:14px;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;}
+  .btn-again{background:var(--yellow);color:var(--text);}
+  .btn-home{background:var(--purple);color:white;}
+  .section-title{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--purple);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .countries-grid{display:flex;flex-direction:column;gap:12px;}
+  .country-card{background:var(--card-bg);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform 0.15s;border:2.5px solid transparent;}
+  .country-card:active{transform:scale(0.98);}
+  .country-card.locked{opacity:0.5;cursor:default;}
+  .country-card.locked:active{transform:none;}
+  .country-card.unlocked{border-color:var(--teal);}
+  .country-flag{font-size:2rem;flex-shrink:0;}
+  .country-info{flex:1;}
+  .country-name{font-weight:800;font-size:1rem;}
+  .country-status{font-size:0.78rem;color:var(--muted);margin-top:2px;}
+  .country-lock{font-size:1.3rem;flex-shrink:0;}
+  .craft-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+  .craft-title{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--purple);}
+  .craft-materials{background:#FFF3CD;border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;border-left:4px solid var(--yellow);}
+  .craft-materials h3{font-weight:800;margin-bottom:8px;color:var(--orange);font-size:0.95rem;}
+  .craft-materials ul{padding-left:18px;}
+  .craft-materials li{font-size:0.9rem;margin-bottom:4px;font-weight:600;}
+  .craft-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+  .craft-step{background:var(--card-bg);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);border-left:4px solid var(--pink);opacity:0.45;transition:opacity 0.3s;}
+  .craft-step.active{opacity:1;border-left-color:var(--purple);}
+  .craft-step.done{opacity:1;border-left-color:var(--teal);background:#f0fff8;}
+  .step-num{background:var(--purple);color:white;border-radius:50%;width:30px;height:30px;min-width:30px;font-weight:900;font-size:0.9rem;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+  .craft-step.done .step-num{background:var(--teal);}
+  .step-text{font-size:0.95rem;font-weight:600;line-height:1.5;margin-bottom:10px;}
+  .step-img{width:100%;border-radius:12px;margin-top:8px;max-height:200px;object-fit:cover;display:block;}
+  .step-img-placeholder{width:100%;height:120px;background:linear-gradient(135deg,#f0e8ff,#e8f4ff);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-top:8px;}
+  .craft-step-nav{display:flex;gap:10px;margin-bottom:16px;}
+  .craft-step-nav button{flex:1;padding:14px;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;}
+  .btn-prev-step{background:#eee;color:var(--text);}
+  .btn-next-step{background:linear-gradient(135deg,var(--purple),var(--pink));color:white;}
+  .btn-done-craft{background:linear-gradient(135deg,var(--teal),var(--blue));color:white;width:100%;padding:16px;border:none;border-radius:var(--radius);font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;cursor:pointer;display:none;}
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--text);color:white;padding:12px 24px;border-radius:30px;font-weight:700;font-size:0.95rem;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+  .toast.show{opacity:1;}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.show{display:flex;}
+  .modal-box{background:white;border-radius:24px;padding:28px 22px;text-align:center;max-width:340px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.2);}
+  .modal-emoji{font-size:3rem;margin-bottom:10px;}
+  .modal-title{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--purple);margin-bottom:8px;}
+  .modal-text{font-size:0.95rem;color:var(--muted);margin-bottom:18px;line-height:1.5;}
+  .modal-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--purple),var(--pink));border:none;border-radius:14px;color:white;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;}
 </style>
 </head>
 <body>
-
-<!-- HEADER -->
 <div class="header">
   <div class="header-title">🎨 Bea's World</div>
   <div class="streak-badge" id="streakBadge">🔥 0 days</div>
 </div>
-
-<!-- LEVEL BAR -->
 <div class="level-bar-wrap">
   <div class="level-label" id="levelLabel">⭐ Level 1</div>
-  <div class="xp-bar-outer">
-    <div class="xp-bar-inner" id="xpBar" style="width:0%"></div>
-  </div>
+  <div class="xp-bar-outer"><div class="xp-bar-inner" id="xpBar" style="width:0%"></div></div>
   <div class="xp-label" id="xpLabel">0 / 100 XP</div>
 </div>
 
-<!-- ══ HOME ══ -->
+<!-- HOME -->
 <div class="screen active" id="screenHome">
   <div class="welcome-msg" id="welcomeMsg">Hello, Bea! 👋</div>
   <div class="welcome-sub">What would you like to do today?</div>
-
   <div class="subject-grid">
-    <div class="subject-card card-maths" onclick="startQuiz('maths')">
-      <div class="icon">🔢</div>
-      <div class="name">Maths</div>
-      <div class="count" id="mathsCount"></div>
-    </div>
-    <div class="subject-card card-spelling" onclick="startQuiz('spelling')">
-      <div class="icon">📝</div>
-      <div class="name">Spelling</div>
-      <div class="count" id="spellingCount"></div>
-    </div>
-    <div class="subject-card card-geography" onclick="startQuiz('geography')">
-      <div class="icon">🌍</div>
-      <div class="name">Geography</div>
-      <div class="count" id="geographyCount"></div>
-    </div>
-    <div class="subject-card card-science" onclick="startQuiz('science')">
-      <div class="icon">🔬</div>
-      <div class="name">Science</div>
-      <div class="count" id="scienceCount"></div>
-    </div>
+    <div class="subject-card card-maths" onclick="startQuiz('maths')"><div class="icon">🔢</div><div class="name">Maths</div><div class="count" id="mathsCount"></div></div>
+    <div class="subject-card card-spelling" onclick="startQuiz('spelling')"><div class="icon">📝</div><div class="name">Spelling</div><div class="count" id="spellingCount"></div></div>
+    <div class="subject-card card-geography" onclick="startQuiz('geography')"><div class="icon">🌍</div><div class="name">Geography</div><div class="count" id="geographyCount"></div></div>
+    <div class="subject-card card-science" onclick="startQuiz('science')"><div class="icon">🔬</div><div class="name">Science</div><div class="count" id="scienceCount"></div></div>
   </div>
-
   <button class="crafts-btn" onclick="showCountries()">🎨 Craft World — Explore Countries!</button>
-
   <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-val" id="statTotal">0</div>
-      <div class="stat-lbl">Questions Answered</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="statCorrect">0</div>
-      <div class="stat-lbl">Correct</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="statCrafts">0</div>
-      <div class="stat-lbl">Crafts Done</div>
-    </div>
+    <div class="stat-card"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Questions</div></div>
+    <div class="stat-card"><div class="stat-val" id="statCorrect">0</div><div class="stat-lbl">Correct</div></div>
+    <div class="stat-card"><div class="stat-val" id="statCrafts">0</div><div class="stat-lbl">Crafts Done</div></div>
   </div>
 </div>
 
-<!-- ══ QUIZ ══ -->
+<!-- QUIZ -->
 <div class="screen" id="screenQuiz">
   <div class="quiz-header">
     <button class="back-btn" onclick="goHome()">←</button>
     <span class="quiz-subject-label" id="quizSubjectLabel"></span>
-    <div class="progress-outer">
-      <div class="progress-inner" id="quizProgress" style="width:0%"></div>
-    </div>
+    <div class="progress-outer"><div class="progress-inner" id="quizProgress" style="width:0%"></div></div>
     <span style="font-size:0.8rem;color:var(--muted);white-space:nowrap;" id="quizCounter">0/10</span>
   </div>
-
   <div class="question-card">
     <div class="question-num" id="questionNum"></div>
     <div class="question-text" id="questionText"></div>
   </div>
-
   <div class="options-list" id="optionsList"></div>
-
   <div class="feedback-msg" id="feedbackMsg"></div>
   <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
 </div>
 
-<!-- ══ RESULTS ══ -->
+<!-- RESULTS -->
 <div class="screen" id="screenResults">
   <div class="results-card">
     <div class="results-emoji" id="resultsEmoji"></div>
@@ -415,7 +171,7 @@
   </div>
 </div>
 
-<!-- ══ COUNTRIES ══ -->
+<!-- COUNTRIES -->
 <div class="screen" id="screenCountries">
   <div class="quiz-header">
     <button class="back-btn" onclick="goHome()">←</button>
@@ -425,32 +181,22 @@
   <div class="countries-grid" id="countriesGrid"></div>
 </div>
 
-<!-- ══ CRAFT TUTORIAL ══ -->
+<!-- CRAFT -->
 <div class="screen" id="screenCraft">
   <div class="craft-header">
     <button class="back-btn" onclick="showCountries()">←</button>
-    <div>
-      <div class="craft-title" id="craftTitle"></div>
-      <div style="font-size:0.8rem;color:var(--muted)" id="craftCountry"></div>
-    </div>
+    <div><div class="craft-title" id="craftTitle"></div><div style="font-size:0.8rem;color:var(--muted)" id="craftCountry"></div></div>
   </div>
-
   <div class="craft-materials" id="craftMaterials"></div>
-
   <div class="craft-steps" id="craftSteps"></div>
-
   <div class="craft-step-nav" id="craftNav">
     <button class="btn-prev-step" onclick="prevStep()">← Back</button>
     <button class="btn-next-step" onclick="nextStep()">Next Step →</button>
   </div>
-
   <button class="btn-done-craft" id="btnDoneCraft" onclick="completeCraft()">🎉 I Finished It!</button>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
-
-<!-- UNLOCK MODAL -->
 <div class="modal-overlay" id="unlockModal">
   <div class="modal-box">
     <div class="modal-emoji" id="modalEmoji"></div>
@@ -461,221 +207,214 @@
 </div>
 
 <script>
-// ══════════════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════════════
-
 const QUESTIONS = {
   maths: [
-    {q:"What is 6 × 7?", opts:["42","40","44","48"], a:0},
-    {q:"What is 8 × 9?", opts:["63","72","81","64"], a:1},
-    {q:"What is half of 48?", opts:["22","24","26","28"], a:1},
-    {q:"What is a quarter of 80?", opts:["15","20","25","30"], a:1},
-    {q:"What is 125 + 87?", opts:["202","212","208","215"], a:1},
-    {q:"What is 300 − 156?", opts:["134","144","154","164"], a:1},
-    {q:"What is 7 × 8?", opts:["54","56","58","60"], a:1},
-    {q:"What is 9 × 9?", opts:["72","81","90","63"], a:1},
-    {q:"What is a third of 90?", opts:["25","30","35","40"], a:1},
-    {q:"What is 250 + 375?", opts:["600","615","625","635"], a:2},
-    {q:"What is 500 − 237?", opts:["253","263","273","283"], a:1},
-    {q:"What is 12 × 12?", opts:["132","140","144","148"], a:2},
-    {q:"What is 3/4 of 100?", opts:["65","70","75","80"], a:2},
-    {q:"What is 6 × 6?", opts:["34","36","38","40"], a:1},
-    {q:"What is 144 ÷ 12?", opts:["10","11","12","13"], a:2},
-    {q:"What is 5 × 11?", opts:["50","55","60","45"], a:1},
-    {q:"What is 99 + 99?", opts:["188","196","198","200"], a:2},
-    {q:"What is 1000 − 450?", opts:["500","540","550","560"], a:2},
-    {q:"What is 4 × 25?", opts:["90","95","100","105"], a:2},
-    {q:"What is half of 250?", opts:["115","120","125","130"], a:2},
-    {q:"What is 7 × 11?", opts:["70","77","78","84"], a:1},
-    {q:"What is 64 ÷ 8?", opts:["6","7","8","9"], a:2},
-    {q:"What is 3 × 3 × 3?", opts:["18","24","27","30"], a:2},
-    {q:"What is 15% of 200?", opts:["25","30","35","40"], a:1},
-    {q:"What is 9 × 6?", opts:["52","54","56","58"], a:1},
-    {q:"What is 1/5 of 75?", opts:["10","12","15","18"], a:2},
-    {q:"What is 200 ÷ 4?", opts:["40","45","50","55"], a:2},
-    {q:"What is 8 × 8?", opts:["60","62","64","66"], a:2},
-    {q:"What is 30% of 50?", opts:["10","12","15","20"], a:2},
-    {q:"What is 11 × 11?", opts:["111","121","131","141"], a:1},
-    {q:"What is 450 + 275?", opts:["705","715","725","735"], a:2},
-    {q:"What is 3/4 of 40?", opts:["25","28","30","32"], a:2},
-    {q:"What is 56 ÷ 7?", opts:["6","7","8","9"], a:2},
-    {q:"What is 6 × 9?", opts:["52","54","56","58"], a:1},
-    {q:"What is double 47?", opts:["84","90","94","98"], a:2},
-    {q:"What is 180 ÷ 9?", opts:["18","20","22","24"], a:1},
-    {q:"What is 13 × 4?", opts:["48","50","52","54"], a:2},
-    {q:"What is 2/3 of 99?", opts:["60","63","66","69"], a:2},
-    {q:"What is 1000 ÷ 25?", opts:["30","35","40","45"], a:2},
-    {q:"What is 8 × 7?", opts:["54","56","58","60"], a:1},
-    {q:"What is 121 ÷ 11?", opts:["9","10","11","12"], a:2},
-    {q:"What is 15 × 3?", opts:["40","42","45","48"], a:2},
-    {q:"What is 600 − 355?", opts:["235","240","245","250"], a:2},
-    {q:"What is 5 × 5 × 5?", opts:["100","115","125","135"], a:2},
-    {q:"What is half of 196?", opts:["88","96","98","100"], a:2},
-    {q:"What is 72 ÷ 8?", opts:["7","8","9","10"], a:2},
-    {q:"What is 25% of 400?", opts:["75","100","125","150"], a:1},
-    {q:"What is 7 × 9?", opts:["56","61","63","65"], a:2},
-    {q:"What is 360 ÷ 4?", opts:["80","85","90","95"], a:2},
-    {q:"What is 19 × 5?", opts:["85","90","95","100"], a:2},
+    {q:"What is 2 + 3?", opts:["4","5","6","7"], a:1},
+    {q:"What is 5 + 4?", opts:["7","8","9","10"], a:2},
+    {q:"What is 10 − 3?", opts:["5","6","7","8"], a:2},
+    {q:"What is 2 × 5?", opts:["8","10","12","14"], a:1},
+    {q:"What is half of 10?", opts:["3","4","5","6"], a:2},
+    {q:"What is 3 + 7?", opts:["8","9","10","11"], a:2},
+    {q:"What is 12 − 4?", opts:["6","7","8","9"], a:2},
+    {q:"What is 2 × 3?", opts:["4","5","6","7"], a:2},
+    {q:"What is 4 + 6?", opts:["8","9","10","11"], a:2},
+    {q:"What is 15 − 5?", opts:["8","9","10","11"], a:2},
+    {q:"What is 3 × 3?", opts:["6","7","8","9"], a:3},
+    {q:"What is half of 8?", opts:["2","3","4","5"], a:2},
+    {q:"What is 5 + 8?", opts:["11","12","13","14"], a:2},
+    {q:"What is 20 − 8?", opts:["10","11","12","13"], a:2},
+    {q:"What is 4 × 2?", opts:["6","7","8","9"], a:2},
+    {q:"What is 6 + 7?", opts:["11","12","13","14"], a:2},
+    {q:"What is 10 + 10?", opts:["18","19","20","21"], a:2},
+    {q:"What is 5 × 2?", opts:["8","9","10","11"], a:2},
+    {q:"What is half of 20?", opts:["8","9","10","11"], a:2},
+    {q:"What is 3 + 9?", opts:["10","11","12","13"], a:2},
+    {q:"What is 20 − 5?", opts:["13","14","15","16"], a:2},
+    {q:"What is 4 × 3?", opts:["10","11","12","13"], a:2},
+    {q:"What is 8 + 9?", opts:["15","16","17","18"], a:2},
+    {q:"What is 25 − 10?", opts:["13","14","15","16"], a:2},
+    {q:"What is 5 × 3?", opts:["13","14","15","16"], a:2},
+    {q:"What is half of 16?", opts:["6","7","8","9"], a:2},
+    {q:"What is 7 + 8?", opts:["13","14","15","16"], a:2},
+    {q:"What is 30 − 10?", opts:["18","19","20","21"], a:2},
+    {q:"What is 10 × 2?", opts:["18","19","20","21"], a:2},
+    {q:"What is 6 + 6?", opts:["10","11","12","13"], a:2},
+    {q:"What is 5 × 5?", opts:["20","23","25","27"], a:2},
+    {q:"What is half of 12?", opts:["4","5","6","7"], a:2},
+    {q:"What is 9 + 9?", opts:["16","17","18","19"], a:2},
+    {q:"What is 50 − 20?", opts:["25","28","30","32"], a:2},
+    {q:"What is 4 × 4?", opts:["14","15","16","17"], a:2},
+    {q:"What is 11 + 9?", opts:["18","19","20","21"], a:2},
+    {q:"What is 3 × 5?", opts:["12","13","14","15"], a:3},
+    {q:"What is half of 14?", opts:["5","6","7","8"], a:2},
+    {q:"What is 6 × 2?", opts:["10","11","12","13"], a:2},
+    {q:"What is 100 − 50?", opts:["40","45","50","55"], a:2},
+    {q:"What is 7 × 2?", opts:["12","13","14","15"], a:2},
+    {q:"What is 8 + 8?", opts:["14","15","16","17"], a:2},
+    {q:"What is half of 18?", opts:["7","8","9","10"], a:2},
+    {q:"What is 2 × 10?", opts:["15","18","20","22"], a:2},
+    {q:"What is 13 + 7?", opts:["18","19","20","21"], a:2},
+    {q:"What is 40 − 15?", opts:["23","24","25","26"], a:2},
+    {q:"What is 3 × 4?", opts:["10","11","12","13"], a:2},
+    {q:"What is half of 6?", opts:["2","3","4","5"], a:1},
+    {q:"What is 20 + 20?", opts:["35","38","40","42"], a:2},
+    {q:"What is 6 × 3?", opts:["15","16","17","18"], a:3},
   ],
-
   spelling: [
-    {q:"Which is spelled correctly?", opts:["Becuase","Because","Becaus","Becaues"], a:1},
-    {q:"Which is spelled correctly?", opts:["Frend","Freind","Friend","Freiend"], a:2},
-    {q:"Which is spelled correctly?", opts:["Beutiful","Beautiful","Beautifull","Beutifull"], a:1},
-    {q:"What is the opposite of 'ancient'?", opts:["Old","Modern","Slow","Tiny"], a:1},
-    {q:"Which is spelled correctly?", opts:["Tomorro","Tomorow","Tomorrow","Tommorrow"], a:2},
-    {q:"What is the plural of 'child'?", opts:["Childs","Children","Childrens","Childer"], a:1},
-    {q:"Which word means 'very big'?", opts:["Tiny","Enormous","Rapid","Gentle"], a:1},
-    {q:"Which is spelled correctly?", opts:["Recieve","Receive","Recive","Receeve"], a:1},
-    {q:"What is the opposite of 'ancient'?", opts:["New","Modern","Recent","Current"], a:1},
-    {q:"Which word means to 'look quickly'?", opts:["Stare","Gaze","Glance","Peer"], a:2},
-    {q:"Which is spelled correctly?", opts:["Beleive","Believe","Beleave","Beleve"], a:1},
-    {q:"What is the plural of 'leaf'?", opts:["Leafs","Leaves","Leafes","Leeves"], a:1},
-    {q:"Which word means 'very fast'?", opts:["Sluggish","Rapid","Gentle","Faint"], a:1},
-    {q:"Which is spelled correctly?", opts:["Seperate","Seprate","Separate","Separete"], a:2},
-    {q:"What is the opposite of 'generous'?", opts:["Kind","Selfish","Brave","Quiet"], a:1},
-    {q:"Which is spelled correctly?", opts:["Knowlege","Knowledge","Knowlegde","Knolwedge"], a:1},
-    {q:"What is the plural of 'mouse'?", opts:["Mouses","Meese","Mice","Mices"], a:2},
-    {q:"Which word means 'to be sorry'?", opts:["Celebrate","Apologise","Admire","Ignore"], a:1},
-    {q:"Which is spelled correctly?", opts:["Occured","Occurred","Ocurred","Occurrred"], a:1},
-    {q:"What is the opposite of 'narrow'?", opts:["Short","Slim","Wide","Flat"], a:2},
-    {q:"Which is spelled correctly?", opts:["Nessesary","Necessary","Necesary","Neccesary"], a:1},
-    {q:"What does 'transparent' mean?", opts:["Heavy","Clear","Soft","Dark"], a:1},
-    {q:"What is the plural of 'tooth'?", opts:["Tooths","Teeths","Teeth","Toothes"], a:2},
-    {q:"Which word means 'very quiet'?", opts:["Loud","Silent","Noisy","Bright"], a:1},
-    {q:"Which is spelled correctly?", opts:["Definitly","Definitley","Definitely","Definately"], a:2},
-    {q:"What does 'ancient' mean?", opts:["Very new","Very small","Very old","Very fast"], a:2},
-    {q:"What is the opposite of 'coward'?", opts:["Villain","Hero","Brave","Timid"], a:2},
-    {q:"Which is spelled correctly?", opts:["Accomodate","Accommodate","Acommodate","Accommodatte"], a:1},
-    {q:"What does 'curious' mean?", opts:["Bored","Angry","Wanting to know","Sleepy"], a:2},
-    {q:"Which word means 'to fix'?", opts:["Break","Repair","Scatter","Lose"], a:1},
-    {q:"Which is spelled correctly?", opts:["Libary","Library","Libary","Liberry"], a:1},
-    {q:"What is the plural of 'foot'?", opts:["Foots","Feets","Feet","Footes"], a:2},
-    {q:"What does 'enormous' mean?", opts:["Tiny","Huge","Quick","Soft"], a:1},
-    {q:"Which word means 'to gather together'?", opts:["Scatter","Collect","Ignore","Wander"], a:1},
-    {q:"Which is spelled correctly?", opts:["Adress","Adress","Address","Adres"], a:2},
-    {q:"What does 'nocturnal' mean?", opts:["Active in the day","Active at night","Very fast","Very loud"], a:1},
-    {q:"What is the opposite of 'shallow'?", opts:["Flat","Deep","Wide","Thin"], a:1},
-    {q:"Which is spelled correctly?", opts:["Febuary","February","Feburary","Februray"], a:1},
-    {q:"What does 'habitat' mean?", opts:["A special food","A type of plant","Where animals live","A kind of weather"], a:2},
-    {q:"Which word means 'very happy'?", opts:["Miserable","Nervous","Joyful","Confused"], a:2},
-    {q:"What is the plural of 'cactus'?", opts:["Cactuses","Cacti","Cactis","Cactees"], a:1},
-    {q:"Which is spelled correctly?", opts:["Grammer","Grammir","Grammar","Gramar"], a:2},
-    {q:"What does 'migrate' mean?", opts:["To eat a lot","To move to another place","To sleep deeply","To grow quickly"], a:1},
-    {q:"What is the opposite of 'smooth'?", opts:["Flat","Rough","Wet","Dark"], a:1},
-    {q:"Which word means to 'look carefully'?", opts:["Glance","Blink","Examine","Ignore"], a:2},
-    {q:"Which is spelled correctly?", opts:["Rythm","Rhythm","Rhythim","Rythim"], a:1},
-    {q:"What does 'frequent' mean?", opts:["Rare","Often","Never","Slow"], a:1},
-    {q:"What is the opposite of 'victory'?", opts:["Prize","Medal","Defeat","Score"], a:2},
-    {q:"Which is spelled correctly?", opts:["Wensday","Wednesday","Wenesday","Wedensday"], a:1},
-    {q:"What does 'evaporate' mean?", opts:["To freeze","To turn to gas","To sink","To grow"], a:1},
+    {q:"Which is the correct spelling?", opts:["cat","kat","catt","katt"], a:0},
+    {q:"Which is the correct spelling?", opts:["dog","dug","dogg","dag"], a:0},
+    {q:"Which is the correct spelling?", opts:["hous","house","howse","houce"], a:1},
+    {q:"Which is the correct spelling?", opts:["frend","freind","friend","frend"], a:2},
+    {q:"Which is the correct spelling?", opts:["skool","scool","school","shcool"], a:2},
+    {q:"Which is the correct spelling?", opts:["becaus","because","becuase","becase"], a:1},
+    {q:"Which is the correct spelling?", opts:["peopel","peeple","people","peaple"], a:2},
+    {q:"Which is the correct spelling?", opts:["woud","would","wuld","wold"], a:1},
+    {q:"Which is the correct spelling?", opts:["tomoro","tomorrow","tommorow","tomorow"], a:1},
+    {q:"Which is the correct spelling?", opts:["said","sayd","sed","saied"], a:0},
+    {q:"What is the opposite of 'hot'?", opts:["warm","cool","cold","icy"], a:2},
+    {q:"What is the opposite of 'big'?", opts:["huge","large","small","tall"], a:2},
+    {q:"What is the opposite of 'happy'?", opts:["sad","angry","tired","quiet"], a:0},
+    {q:"What is the opposite of 'fast'?", opts:["quick","slow","still","calm"], a:1},
+    {q:"What is the opposite of 'day'?", opts:["morning","evening","night","noon"], a:2},
+    {q:"What does 'huge' mean?", opts:["tiny","very big","quite small","medium"], a:1},
+    {q:"What does 'shout' mean?", opts:["whisper","sing","talk loudly","laugh"], a:2},
+    {q:"What is the plural of 'cat'?", opts:["cates","cat","cats","catz"], a:2},
+    {q:"What is the plural of 'dog'?", opts:["dogs","doges","dogz","dog"], a:0},
+    {q:"What is the plural of 'book'?", opts:["bookes","books","bookz","book"], a:1},
+    {q:"Which is the correct spelling?", opts:["lite","light","lightt","lihgt"], a:1},
+    {q:"Which is the correct spelling?", opts:["nite","knigt","night","nihgt"], a:2},
+    {q:"Which is the correct spelling?", opts:["rite","right","rightt","riight"], a:1},
+    {q:"Which is the correct spelling?", opts:["wate","wayt","wait","wiat"], a:2},
+    {q:"Which is the correct spelling?", opts:["plaey","play","playe","plai"], a:1},
+    {q:"What is the opposite of 'old'?", opts:["aged","new","ancient","worn"], a:1},
+    {q:"What is the opposite of 'up'?", opts:["left","side","down","across"], a:2},
+    {q:"What is the opposite of 'hard'?", opts:["rough","firm","soft","tough"], a:2},
+    {q:"What is the opposite of 'loud'?", opts:["noisy","quiet","silent","calm"], a:1},
+    {q:"What is the opposite of 'wet'?", opts:["damp","moist","dry","soggy"], a:2},
+    {q:"Which is the correct spelling?", opts:["happey","hapy","happy","happi"], a:2},
+    {q:"Which is the correct spelling?", opts:["runing","running","runnig","ruuning"], a:1},
+    {q:"Which is the correct spelling?", opts:["jumped","jumpd","juumped","jumpped"], a:0},
+    {q:"Which is the correct spelling?", opts:["beutiful","beautiful","beautifull","beautyful"], a:1},
+    {q:"Which is the correct spelling?", opts:["watir","watar","water","waater"], a:2},
+    {q:"What does 'cold' mean?", opts:["very hot","not warm","burning","steamy"], a:1},
+    {q:"What does 'tiny' mean?", opts:["huge","very big","very small","medium"], a:2},
+    {q:"What does 'quick' mean?", opts:["slow","fast","lazy","careful"], a:1},
+    {q:"What does 'start' mean?", opts:["finish","pause","begin","stop"], a:2},
+    {q:"What does 'shut' mean?", opts:["open","break","close","push"], a:2},
+    {q:"Which is the correct spelling?", opts:["monky","monkey","monkee","monckey"], a:1},
+    {q:"Which is the correct spelling?", opts:["buterfly","butterfly","butterfliy","butterflie"], a:1},
+    {q:"Which is the correct spelling?", opts:["elefant","elephent","elephant","elaephant"], a:2},
+    {q:"Which is the correct spelling?", opts:["giraffe","girrafe","girafe","girafffe"], a:0},
+    {q:"Which is the correct spelling?", opts:["pengiun","penguin","penquin","pengwen"], a:1},
+    {q:"What is the plural of 'fish'?", opts:["fishs","fishies","fish","fishes"], a:2},
+    {q:"What is the plural of 'box'?", opts:["boxs","boxies","boxes","boxxes"], a:2},
+    {q:"What is the plural of 'tree'?", opts:["treees","treeies","trees","treez"], a:2},
+    {q:"What does 'brave' mean?", opts:["scared","not afraid","very small","tired"], a:1},
+    {q:"What does 'kind' mean?", opts:["mean","nasty","nice and caring","grumpy"], a:2},
   ],
-
   geography: [
-    {q:"What is the capital of France?", opts:["Lyon","Marseille","Paris","Nice"], a:2},
-    {q:"What is the capital of Portugal?", opts:["Porto","Faro","Coimbra","Lisbon"], a:3},
-    {q:"Which is the longest river in the world?", opts:["Amazon","Nile","Yangtze","Mississippi"], a:1},
-    {q:"On which continent is Brazil?", opts:["Africa","Asia","South America","Europe"], a:2},
+    {q:"What is the capital of France?", opts:["Lyon","Paris","Nice","Bordeaux"], a:1},
+    {q:"What is the capital of Portugal?", opts:["Porto","Faro","Lisbon","Braga"], a:2},
+    {q:"What is the capital of Spain?", opts:["Barcelona","Seville","Valencia","Madrid"], a:3},
+    {q:"What is the capital of Italy?", opts:["Milan","Naples","Rome","Venice"], a:2},
     {q:"What is the capital of Japan?", opts:["Osaka","Tokyo","Kyoto","Hiroshima"], a:1},
-    {q:"Which ocean is the largest?", opts:["Atlantic","Indian","Arctic","Pacific"], a:3},
+    {q:"On which continent is Brazil?", opts:["Africa","Europe","South America","Asia"], a:2},
+    {q:"Which is the biggest ocean?", opts:["Atlantic","Indian","Arctic","Pacific"], a:3},
+    {q:"On which continent is Egypt?", opts:["Asia","Europe","Africa","Australia"], a:2},
     {q:"What is the capital of Australia?", opts:["Sydney","Melbourne","Canberra","Brisbane"], a:2},
-    {q:"On which continent is Egypt?", opts:["Asia","Europe","Africa","South America"], a:2},
-    {q:"What is the capital of Spain?", opts:["Barcelona","Seville","Madrid","Valencia"], a:2},
-    {q:"Which is the tallest mountain in the world?", opts:["K2","Kilimanjaro","Everest","Mont Blanc"], a:2},
-    {q:"What is the capital of Italy?", opts:["Milan","Naples","Venice","Rome"], a:3},
-    {q:"Which country has the most people?", opts:["USA","Brazil","India","Russia"], a:2},
-    {q:"What is the capital of Brazil?", opts:["Rio de Janeiro","São Paulo","Brasília","Salvador"], a:2},
-    {q:"Which continent is the largest?", opts:["Africa","North America","Asia","Europe"], a:2},
+    {q:"Which country has the Eiffel Tower?", opts:["Italy","Spain","France","Belgium"], a:2},
     {q:"What is the capital of Germany?", opts:["Munich","Hamburg","Frankfurt","Berlin"], a:3},
-    {q:"Which country is home to the Eiffel Tower?", opts:["Italy","Spain","France","Belgium"], a:2},
-    {q:"What is the capital of Mexico?", opts:["Cancún","Mexico City","Guadalajara","Puebla"], a:1},
-    {q:"Which is the smallest continent?", opts:["Europe","Antarctica","Australia","South America"], a:2},
-    {q:"What is the capital of South Africa?", opts:["Cape Town","Johannesburg","Pretoria","Durban"], a:2},
-    {q:"Which country has the Amazon rainforest?", opts:["Colombia","Peru","Brazil","Bolivia"], a:2},
-    {q:"What is the capital of China?", opts:["Shanghai","Hong Kong","Guangzhou","Beijing"], a:3},
-    {q:"Which ocean borders Europe to the west?", opts:["Pacific","Indian","Atlantic","Arctic"], a:2},
-    {q:"What is the capital of India?", opts:["Mumbai","Kolkata","Chennai","New Delhi"], a:3},
+    {q:"Which is the longest river in the world?", opts:["Amazon","Nile","Thames","Rhine"], a:1},
     {q:"On which continent is Canada?", opts:["South America","Europe","Asia","North America"], a:3},
+    {q:"What is the capital of Brazil?", opts:["Rio de Janeiro","São Paulo","Brasília","Salvador"], a:2},
+    {q:"Which country has the Amazon rainforest?", opts:["Colombia","Peru","Brazil","Bolivia"], a:2},
+    {q:"What is the capital of China?", opts:["Shanghai","Hong Kong","Beijing","Guangzhou"], a:2},
+    {q:"What is the capital of India?", opts:["Mumbai","Kolkata","Chennai","New Delhi"], a:3},
     {q:"What is the capital of Russia?", opts:["St Petersburg","Minsk","Kiev","Moscow"], a:3},
-    {q:"Which country is Mount Fuji in?", opts:["China","South Korea","Japan","Thailand"], a:2},
-    {q:"What is the capital of Greece?", opts:["Thessaloniki","Athens","Crete","Sparta"], a:1},
-    {q:"Which is the largest country by area?", opts:["China","USA","Canada","Russia"], a:3},
-    {q:"What is the capital of Argentina?", opts:["Montevideo","Santiago","Lima","Buenos Aires"], a:3},
-    {q:"On which continent is Kenya?", opts:["Asia","Australia","Africa","Europe"], a:2},
-    {q:"What is the capital of Canada?", opts:["Toronto","Vancouver","Ottawa","Montreal"], a:2},
     {q:"Which river flows through London?", opts:["Severn","Avon","Thames","Trent"], a:2},
-    {q:"What is the capital of Egypt?", opts:["Alexandria","Luxor","Aswan","Cairo"], a:3},
-    {q:"Which country is the Great Barrier Reef in?", opts:["New Zealand","Fiji","Australia","Indonesia"], a:2},
     {q:"What is the capital of Ireland?", opts:["Cork","Belfast","Galway","Dublin"], a:3},
-    {q:"Which ocean is between Africa and Australia?", opts:["Pacific","Atlantic","Arctic","Indian"], a:3},
-    {q:"What is the capital of Peru?", opts:["Cusco","Lima","Bogotá","Quito"], a:1},
-    {q:"On which continent is Indonesia?", opts:["Africa","Australia","Asia","South America"], a:2},
-    {q:"What is the capital of Nigeria?", opts:["Lagos","Kano","Port Harcourt","Abuja"], a:3},
-    {q:"Which country has the most land?", opts:["Australia","USA","Russia","China"], a:2},
+    {q:"On which continent is Kenya?", opts:["Asia","Australia","Africa","Europe"], a:2},
+    {q:"What is the capital of Greece?", opts:["Thessaloniki","Athens","Crete","Sparta"], a:1},
+    {q:"Which country is Mount Fuji in?", opts:["China","South Korea","Japan","Thailand"], a:2},
+    {q:"What is the capital of Mexico?", opts:["Cancún","Mexico City","Guadalajara","Puebla"], a:1},
     {q:"What is the capital of Sweden?", opts:["Oslo","Copenhagen","Helsinki","Stockholm"], a:3},
-    {q:"Which sea is between Italy and Croatia?", opts:["Red Sea","Black Sea","Adriatic Sea","Caspian Sea"], a:2},
-    {q:"What is the capital of New Zealand?", opts:["Auckland","Christchurch","Wellington","Queenstown"], a:2},
-    {q:"On which continent is Morocco?", opts:["Europe","Asia","Africa","South America"], a:2},
-    {q:"What is the capital of Poland?", opts:["Krakow","Gdansk","Wroclaw","Warsaw"], a:3},
-    {q:"Which country is the Sahara Desert mainly in?", opts:["Libya","Egypt","Algeria","Morocco"], a:2},
+    {q:"Which country is New Zealand near?", opts:["Japan","South Africa","Australia","Brazil"], a:2},
+    {q:"What is the capital of Canada?", opts:["Toronto","Vancouver","Ottawa","Montreal"], a:2},
+    {q:"What continent is Australia on?", opts:["Asia","Africa","Europe","Australia/Oceania"], a:3},
+    {q:"What is the capital of South Africa?", opts:["Cape Town","Johannesburg","Pretoria","Durban"], a:2},
+    {q:"What is the capital of Argentina?", opts:["Montevideo","Santiago","Lima","Buenos Aires"], a:3},
+    {q:"What country has the Great Wall?", opts:["Japan","India","China","Korea"], a:2},
+    {q:"What is the capital of Egypt?", opts:["Alexandria","Luxor","Aswan","Cairo"], a:3},
+    {q:"Which country has Big Ben?", opts:["France","USA","England","Germany"], a:2},
     {q:"What is the capital of Thailand?", opts:["Chiang Mai","Phuket","Pattaya","Bangkok"], a:3},
-    {q:"Which mountain range separates Europe and Asia?", opts:["Alps","Urals","Andes","Rockies"], a:1},
+    {q:"Which country has the Great Barrier Reef?", opts:["New Zealand","Fiji","Australia","Indonesia"], a:2},
+    {q:"What is the capital of Nigeria?", opts:["Lagos","Kano","Port Harcourt","Abuja"], a:3},
+    {q:"What is the capital of Poland?", opts:["Krakow","Gdansk","Wroclaw","Warsaw"], a:3},
     {q:"What is the capital of the Netherlands?", opts:["Rotterdam","The Hague","Utrecht","Amsterdam"], a:3},
     {q:"Which continent is at the South Pole?", opts:["Australia","Arctic","Africa","Antarctica"], a:3},
+    {q:"What is the capital of Peru?", opts:["Cusco","Lima","Bogotá","Quito"], a:1},
+    {q:"Which country is the Colosseum in?", opts:["Greece","Spain","France","Italy"], a:3},
+    {q:"What is the capital of New Zealand?", opts:["Auckland","Christchurch","Wellington","Queenstown"], a:2},
+    {q:"Which country is famous for tulips?", opts:["Belgium","Germany","Netherlands","Denmark"], a:2},
+    {q:"What country is the Sahara Desert mainly in?", opts:["Libya","Egypt","Algeria","Morocco"], a:2},
+    {q:"Which mountain is the tallest in the world?", opts:["K2","Kilimanjaro","Everest","Mont Blanc"], a:2},
+    {q:"What is the capital of Norway?", opts:["Stockholm","Copenhagen","Helsinki","Oslo"], a:3},
+    {q:"Which country has a maple leaf on its flag?", opts:["Australia","Canada","New Zealand","USA"], a:1},
+    {q:"What is the capital of Turkey?", opts:["Istanbul","Izmir","Antalya","Ankara"], a:3},
+    {q:"What country borders France to the north-east?", opts:["Spain","Italy","Belgium","Portugal"], a:2},
+    {q:"How many continents are there?", opts:["5","6","7","8"], a:2},
   ],
-
   science: [
-    {q:"What do plants need to make food?", opts:["Darkness and rain","Sunlight, water and CO₂","Just soil","Wind and temperature"], a:1},
-    {q:"What planet is closest to the Sun?", opts:["Venus","Earth","Mercury","Mars"], a:2},
-    {q:"What is the powerhouse of the cell?", opts:["Nucleus","Cell wall","Mitochondria","Ribosome"], a:2},
-    {q:"What gas do we breathe in to survive?", opts:["Carbon dioxide","Nitrogen","Oxygen","Hydrogen"], a:2},
-    {q:"What force pulls objects to the ground?", opts:["Magnetism","Friction","Gravity","Electricity"], a:2},
-    {q:"What is the largest organ in the human body?", opts:["Heart","Liver","Brain","Skin"], a:3},
-    {q:"How many bones are in the adult human body?", opts:["186","206","226","246"], a:1},
-    {q:"What is the centre of an atom called?", opts:["Shell","Core","Proton","Nucleus"], a:3},
-    {q:"Which planet has rings around it?", opts:["Mars","Jupiter","Saturn","Neptune"], a:2},
-    {q:"What gas do plants release?", opts:["Carbon dioxide","Hydrogen","Nitrogen","Oxygen"], a:3},
-    {q:"What is the chemical symbol for water?", opts:["WA","H₂O","HO₂","W₂O"], a:1},
-    {q:"How many chambers does the human heart have?", opts:["2","3","4","5"], a:2},
-    {q:"What type of animal is a dolphin?", opts:["Fish","Reptile","Mammal","Amphibian"], a:2},
-    {q:"What is the speed of light approximately?", opts:["100,000 km/s","300,000 km/s","500,000 km/s","1,000,000 km/s"], a:1},
-    {q:"Which planet is known as the Red Planet?", opts:["Venus","Jupiter","Mars","Saturn"], a:2},
-    {q:"What is the process by which water turns to vapour?", opts:["Condensation","Evaporation","Precipitation","Freezing"], a:1},
-    {q:"What is the hardest natural material?", opts:["Gold","Iron","Quartz","Diamond"], a:3},
-    {q:"How many planets are in our solar system?", opts:["7","8","9","10"], a:1},
-    {q:"What is photosynthesis?", opts:["How animals breathe","How plants make food from sunlight","How water evaporates","How rocks form"], a:1},
-    {q:"Which part of the plant absorbs water from the soil?", opts:["Leaves","Stem","Roots","Flowers"], a:2},
-    {q:"What type of energy does the Sun produce?", opts:["Electrical","Chemical","Nuclear","Mechanical"], a:2},
-    {q:"What are the three states of matter?", opts:["Air, earth, fire","Solid, liquid, gas","Wet, dry, frozen","Hot, cold, warm"], a:1},
-    {q:"What is the largest planet in our solar system?", opts:["Saturn","Neptune","Jupiter","Uranus"], a:2},
+    {q:"What do plants need to grow?", opts:["Darkness and snow","Sunlight and water","Just soil","Wind only"], a:1},
+    {q:"What do we breathe in to survive?", opts:["Carbon dioxide","Nitrogen","Oxygen","Hydrogen"], a:2},
+    {q:"What force pulls things to the ground?", opts:["Magnetism","Friction","Gravity","Electricity"], a:2},
+    {q:"What is the closest planet to the Sun?", opts:["Venus","Earth","Mercury","Mars"], a:2},
+    {q:"What gas do plants give out?", opts:["Carbon dioxide","Hydrogen","Nitrogen","Oxygen"], a:3},
     {q:"What do we call animals that eat only plants?", opts:["Carnivores","Omnivores","Herbivores","Predators"], a:2},
-    {q:"Which layer of Earth is the outermost?", opts:["Mantle","Core","Magma","Crust"], a:3},
-    {q:"What is the chemical symbol for gold?", opts:["Go","Gd","Au","Ag"], a:2},
-    {q:"How long does light from the Sun take to reach Earth?", opts:["8 seconds","8 minutes","8 hours","8 days"], a:1},
-    {q:"What is the role of white blood cells?", opts:["Carry oxygen","Fight infection","Digest food","Pump blood"], a:1},
+    {q:"Which planet is called the Red Planet?", opts:["Venus","Jupiter","Mars","Saturn"], a:2},
+    {q:"What is the biggest organ in your body?", opts:["Heart","Liver","Brain","Skin"], a:3},
+    {q:"What is the chemical symbol for water?", opts:["WA","H₂O","HO₂","W₂O"], a:1},
+    {q:"What type of animal is a dolphin?", opts:["Fish","Reptile","Mammal","Amphibian"], a:2},
+    {q:"What are the three states of matter?", opts:["Air, earth, fire","Solid, liquid, gas","Wet, dry, frozen","Hot, cold, warm"], a:1},
+    {q:"What is the largest planet?", opts:["Saturn","Neptune","Jupiter","Uranus"], a:2},
+    {q:"How many planets are in our solar system?", opts:["7","8","9","10"], a:1},
+    {q:"Which part of the plant absorbs water?", opts:["Leaves","Stem","Roots","Flowers"], a:2},
+    {q:"What do we call animals that eat only meat?", opts:["Herbivores","Omnivores","Carnivores","Predators"], a:2},
+    {q:"What is the process of water turning to vapour?", opts:["Condensation","Evaporation","Precipitation","Freezing"], a:1},
     {q:"What type of rock forms from cooled lava?", opts:["Sedimentary","Metamorphic","Fossilised","Igneous"], a:3},
-    {q:"What is the unit of electrical power?", opts:["Volt","Ampere","Watt","Ohm"], a:2},
-    {q:"What gas makes up most of Earth's atmosphere?", opts:["Oxygen","Carbon dioxide","Nitrogen","Argon"], a:2},
-    {q:"What is a food chain?", opts:["A type of restaurant","The order of who eats who in nature","A shopping list","A cooking method"], a:1},
-    {q:"What part of the eye controls how much light enters?", opts:["Retina","Cornea","Pupil","Lens"], a:2},
-    {q:"Which planet is farthest from the Sun?", opts:["Saturn","Uranus","Neptune","Jupiter"], a:2},
-    {q:"What do we call the bones that protect the brain?", opts:["Spine","Ribcage","Skull","Pelvis"], a:2},
-    {q:"What is condensation?", opts:["Water turning to steam","Water vapour turning to liquid","Ice melting","Rain falling"], a:1},
-    {q:"What is the function of chlorophyll in plants?", opts:["It absorbs water","It traps sunlight for photosynthesis","It stores nutrients","It fights disease"], a:1},
-    {q:"Which planet is known for its Great Red Spot?", opts:["Mars","Saturn","Neptune","Jupiter"], a:3},
-    {q:"What type of energy is stored in food?", opts:["Kinetic","Electrical","Chemical","Nuclear"], a:2},
-    {q:"What is the process of a caterpillar becoming a butterfly called?", opts:["Hibernation","Migration","Metamorphosis","Photosynthesis"], a:2},
+    {q:"How many bones are in the adult human body?", opts:["186","206","226","246"], a:1},
+    {q:"What is photosynthesis?", opts:["How animals breathe","How plants make food from sunlight","How water evaporates","How rocks form"], a:1},
+    {q:"What does a caterpillar turn into?", opts:["A moth only","A bee","A butterfly or moth","A dragonfly"], a:2},
+    {q:"What is the centre of our solar system?", opts:["The Moon","The Earth","The Sun","Mars"], a:2},
+    {q:"What do we call animals that eat both plants and meat?", opts:["Carnivores","Omnivores","Herbivores","Prey"], a:1},
+    {q:"Which planet has rings around it?", opts:["Mars","Jupiter","Saturn","Neptune"], a:2},
     {q:"What do kidneys do?", opts:["Pump blood","Filter waste from blood","Break down food","Control breathing"], a:1},
-    {q:"What is the unit of measuring temperature?", opts:["Metres","Watts","Degrees","Litres"], a:2},
+    {q:"What gas do we breathe OUT?", opts:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"], a:2},
+    {q:"What type of animal is a frog?", opts:["Mammal","Reptile","Fish","Amphibian"], a:3},
+    {q:"What is the freezing point of water?", opts:["-10°C","0°C","4°C","10°C"], a:1},
+    {q:"What is the hardest natural material?", opts:["Gold","Iron","Quartz","Diamond"], a:3},
+    {q:"What protects the brain?", opts:["Spine","Ribcage","Skull","Pelvis"], a:2},
+    {q:"How does sound travel?", opts:["Through light","Through waves","Through empty space","Through heat"], a:1},
+    {q:"What do we call the study of living things?", opts:["Chemistry","Physics","Biology","Geography"], a:2},
+    {q:"What is the main source of energy for Earth?", opts:["The Moon","The Earth's core","The Sun","Wind"], a:2},
+    {q:"What type of animal is a shark?", opts:["Mammal","Reptile","Amphibian","Fish"], a:3},
+    {q:"What do roots do for a plant?", opts:["Make food","Absorb water and nutrients","Attract insects","Make seeds"], a:1},
+    {q:"Which is NOT a planet?", opts:["Mars","Venus","The Moon","Saturn"], a:2},
+    {q:"What makes rainbows appear?", opts:["Wind and dust","Light through water droplets","Clouds moving","Very cold air"], a:1},
+    {q:"What is the role of the heart?", opts:["Digest food","Filter blood","Pump blood around the body","Help us breathe"], a:2},
+    {q:"What is condensation?", opts:["Water turning to steam","Water vapour turning to liquid","Ice melting","Rain falling"], a:1},
+    {q:"What type of scientist studies stars and planets?", opts:["Biologist","Astronomer","Geologist","Chemist"], a:1},
+    {q:"What do we call baby frogs?", opts:["Tadpoles","Kittens","Larvae","Spawn"], a:0},
+    {q:"What is a food chain?", opts:["A type of restaurant","The order of who eats who in nature","A shopping list","A cooking method"], a:1},
+    {q:"Which planet is closest to Earth?", opts:["Mars","Mercury","Venus","Jupiter"], a:2},
+    {q:"What do we call it when a bear sleeps all winter?", opts:["Sleeping","Hibernating","Migrating","Resting"], a:1},
+    {q:"What is the Sun made of?", opts:["Rock and stone","Ice and water","Hot gas","Metal"], a:2},
+    {q:"What do we call animals that come out at night?", opts:["Diurnal","Solar","Nocturnal","Crepuscular"], a:2},
+    {q:"What gives plants their green colour?", opts:["Water","Soil minerals","Chlorophyll","Sunlight"], a:2},
+    {q:"What is the unit for measuring temperature?", opts:["Metres","Watts","Degrees","Litres"], a:2},
+    {q:"What do lungs do?", opts:["Pump blood","Help us breathe","Digest food","Filter waste"], a:1},
     {q:"What type of animal is a crocodile?", opts:["Mammal","Amphibian","Reptile","Fish"], a:2},
-    {q:"How does sound travel?", opts:["Through light","Through waves in matter","Through empty space","Through heat"], a:1},
-    {q:"What does DNA stand for?", opts:["Digital Nucleus Acid","Deoxyribonucleic Acid","Direct Nucleus Arrangement","Data Nucleotide Array"], a:1},
-    {q:"What is the main source of energy for Earth?", opts:["The Moon","The core","The Sun","Wind"], a:2},
-    {q:"What type of scientist studies earthquakes?", opts:["Biologist","Astronomer","Seismologist","Chemist"], a:2},
-    {q:"What is the freezing point of water in Celsius?", opts:["-10°C","0°C","4°C","10°C"], a:1},
-    {q:"What is the name of the force that resists sliding?", opts:["Gravity","Magnetism","Friction","Tension"], a:2},
-    {q:"What are the tiny organisms that cause disease called?", opts:["Fungi","Germs/Microbes","Parasites","Viruses only"], a:1},
+    {q:"What do we call tiny living things too small to see?", opts:["Atoms","Microbes","Pixels","Cells only"], a:1},
   ]
 };
 
@@ -683,230 +422,228 @@ const COUNTRIES = [
   {
     name:"Japan", flag:"🇯🇵", unlock:5,
     craft:"Origami Crane",
-    description:"Make a traditional Japanese paper crane — a symbol of good luck!",
-    materials:["1 square sheet of paper (any colour)","A flat surface to work on"],
+    description:"Fold a traditional Japanese paper crane for good luck!",
+    materials:["1 square piece of paper","A flat surface to work on"],
     steps:[
-      "Lay your paper face-down on a flat surface. Fold it diagonally corner to corner, then unfold. Fold the other diagonal corners together, then unfold. You should see an X crease.",
-      "Now fold the paper in half horizontally (left to right), then unfold. Fold it in half vertically (top to bottom), then unfold. You now have a cross crease too.",
-      "Push the four corners together so the paper collapses into a small square with open flaps at the bottom. This is called a 'preliminary base'.",
-      "With the open flaps facing you, fold the right edge of the top layer to the centre crease. Repeat on the left side. Flip over and do the same on the back. You now have a kite shape.",
-      "Fold the top triangle down over the folded edges, crease it well, then unfold it. Now carefully open the top layer flap upwards, pulling the sides apart — this forms a long diamond shape. Flip over and repeat on the back.",
-      "Fold the bottom right edge of the top layer to the centre crease. Repeat on the left. Flip and repeat on the back. You now have a thinner diamond shape with two long points at the bottom.",
-      "Take one of the bottom points and fold it upwards inside the model — this is an inside reverse fold. Fold it up most of the way, leaving a little sticking out for the head. Repeat on the other side for the tail.",
-      "For the head: take the very tip of one point and fold it down slightly with a small inside reverse fold to create the crane's beak.",
-      "Gently pull the two wings apart and your crane will puff out slightly. Your origami crane is complete! 🎉"
+      {text:"Lay your paper face-down. Fold it diagonally corner to corner to make a triangle, then unfold. Do the same the other way. You should see a big X shape.", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Origami_crane_step_1.jpg/320px-Origami_crane_step_1.jpg", emoji:"📄"},
+      {text:"Now fold the paper in half from left to right, then unfold. Fold it in half top to bottom, then unfold. You now have a cross crease as well as the X.", img:"", emoji:"✂️"},
+      {text:"Push the four corners together so the paper collapses into a small square — open flaps at the bottom. This is called a preliminary base!", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Origami_base_preliminary.jpg/320px-Origami_base_preliminary.jpg", emoji:"📐"},
+      {text:"With open flaps toward you, fold the right edge of the top layer to the centre crease. Repeat on the left. Flip over and do the same on the back.", img:"", emoji:"👐"},
+      {text:"Fold the top triangle down over the folded edges, crease it, then unfold. Open the top flap upward pulling the sides apart to make a long diamond shape. Flip and repeat.", img:"", emoji:"💎"},
+      {text:"Fold the bottom right edge to the centre crease. Repeat left. Flip and repeat on the back. You now have a thinner diamond with two long points at the bottom.", img:"", emoji:"🔻"},
+      {text:"Take one bottom point and fold it upward inside the model — this is called an inside reverse fold. Fold it up high, leaving a little sticking out for the head. Repeat on the other side for the tail.", img:"", emoji:"⬆️"},
+      {text:"For the head: take the very tip of one point and fold it down slightly with a small inside reverse fold to make the beak.", img:"", emoji:"👆"},
+      {text:"Gently pull the two wings apart and your crane will puff out slightly. Your origami crane is complete! 🎉", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Origami_crane.jpg/320px-Origami_crane.jpg", emoji:"🐦"},
     ]
   },
   {
     name:"Brazil", flag:"🇧🇷", unlock:10,
     craft:"Rainforest Butterfly",
-    description:"Create a beautiful rainforest butterfly using coffee filter paper!",
-    materials:["2 coffee filters (round)","Washable markers — lots of bright colours","Water in a small bowl","A pipe cleaner (brown or black)","Newspaper or kitchen paper to protect your surface"],
+    description:"Create a beautiful butterfly using coffee filter paper!",
+    materials:["2 coffee filters","Washable markers — lots of bright colours","Water in a small bowl","A pipe cleaner","Newspaper to protect your surface"],
     steps:[
-      "Lay both coffee filters flat on your protected surface. Using bright washable markers, draw large colourful spots, spirals, and patterns all over both filters. Be bold — use lots of different colours!",
-      "Dip your finger in the water and gently dab it over your patterns. Watch the colours bleed and blend together like magic! Don't soak the paper — just enough to blend the colours. Leave to dry for 5 minutes.",
-      "Once dry, take one coffee filter and fold it in half, then fold it in half again so you have a quarter-circle wedge. This will be the top wings. Pinch the pointed end — that's the centre.",
-      "Do the same with the second coffee filter. This will be the bottom wings.",
-      "Hold both pinched ends together — top wings and bottom wings meeting at the centre. Wrap the pipe cleaner tightly around the middle several times to hold them together.",
-      "Leave two long ends of the pipe cleaner sticking up — curl these slightly outward at the tips to make the butterfly's antennae.",
-      "Gently separate and fluff out the wings so they fan open beautifully. Your rainforest butterfly is ready to display! 🦋"
+      {text:"Lay both coffee filters flat. Using bright markers, draw large colourful spots, spirals, and patterns all over both filters. Be bold — use lots of different colours!", img:"", emoji:"🖍️"},
+      {text:"Dip your finger in water and gently dab it over your patterns. Watch the colours bleed and blend together like magic! Don't soak — just enough to blend. Leave to dry for 5 minutes.", img:"", emoji:"💧"},
+      {text:"Once dry, fold one coffee filter in half, then in half again — you get a quarter-circle wedge. Pinch the pointed end. This will be the top wings.", img:"", emoji:"📄"},
+      {text:"Do the same with the second coffee filter for the bottom wings.", img:"", emoji:"📄"},
+      {text:"Hold both pinched ends together — top wings and bottom wings at the centre. Wrap the pipe cleaner tightly around the middle several times to hold them.", img:"", emoji:"🔧"},
+      {text:"Leave two long ends of the pipe cleaner sticking up — curl these slightly at the tips to make the butterfly's antennae.", img:"", emoji:"📡"},
+      {text:"Gently fan out the wings so they spread beautifully. Your rainforest butterfly is ready to display! 🦋", img:"", emoji:"🦋"},
     ]
   },
   {
     name:"France", flag:"🇫🇷", unlock:15,
     craft:"Paper Eiffel Tower",
-    description:"Build your own Eiffel Tower using paper and card!",
-    materials:["2 sheets of A4 paper","Scissors","Ruler","Pencil","Glue stick or tape","Grey or brown colouring pencil (optional)"],
+    description:"Build your own Eiffel Tower using paper!",
+    materials:["2 sheets of A4 paper","Scissors","Ruler","Pencil","Glue or tape","Grey colouring pencil (optional)"],
     steps:[
-      "On one sheet of paper, draw a tower outline: start with a wide base (about 12cm across at the bottom), then draw the sides curving slightly inward as they go up, meeting at a narrow point about 25cm tall. This is your tower shape — you'll make two of these.",
-      "Cut out both tower shapes carefully. If you like, lightly shade them grey or brown with your colouring pencil to look like metal.",
-      "On one tower piece, draw horizontal lines across it every 2cm from bottom to top — these are the 'floors' of the tower. Draw a criss-cross pattern between each pair of lines to look like the lattice ironwork.",
-      "Fold the second tower piece in half lengthways (top to bottom) so you get a long thin strip down the middle.",
-      "Cut a slit from the bottom of the folded piece up to the halfway point. Cut a slit from the top of the first tower piece down to the halfway point.",
-      "Slot the two pieces together through the slits — they should lock at the middle and hold each other upright at a 90° angle so the tower stands up on its own.",
-      "Add a tiny paper flag to the very top with a small strip of paper. Stand your Eiffel Tower on your desk and admire your work! 🗼"
+      {text:"On one sheet, draw a tower shape: wide at the bottom (about 12cm), sides curving inward as they go up, meeting at a narrow point about 25cm tall. Draw two of these.", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg/220px-Tour_Eiffel_Wikimedia_Commons.jpg", emoji:"✏️"},
+      {text:"Cut out both tower shapes. If you like, lightly colour them grey to look like metal.", img:"", emoji:"✂️"},
+      {text:"On one tower piece, draw horizontal lines every 2cm from bottom to top. Draw criss-cross patterns between the lines to look like the metal framework.", img:"", emoji:"📏"},
+      {text:"Fold the second tower piece in half lengthways to get a long thin strip down the middle.", img:"", emoji:"📄"},
+      {text:"Cut a slit from the bottom of the folded piece up to the halfway point. Cut a slit from the top of the first tower down to the halfway point.", img:"", emoji:"✂️"},
+      {text:"Slot the two pieces together through the slits — they lock at the middle and hold each other upright at 90° so the tower stands up!", img:"", emoji:"🗼"},
+      {text:"Add a tiny paper flag to the very top. Stand your Eiffel Tower on your desk! 🗼", img:"", emoji:"🏁"},
     ]
   },
   {
     name:"India", flag:"🇮🇳", unlock:20,
-    craft:"Rangoli Patterns",
-    description:"Create a stunning Indian Rangoli pattern with coloured chalk or pencils!",
-    materials:["Dark paper or card (black or dark blue works best)","Coloured chalk, pastels, or bright colouring pencils","A compass or round objects to trace circles","Ruler","Pencil"],
+    craft:"Rangoli Pattern",
+    description:"Create a stunning Indian Rangoli pattern with coloured pencils!",
+    materials:["Dark paper or card (black works best)","Coloured chalk, pastels, or bright colouring pencils","Compass or round objects to trace","Ruler","Pencil"],
     steps:[
-      "Place your dark paper flat on your surface. Using a compass or by tracing around a round object, draw a small circle in the centre of the paper — about 3cm wide.",
-      "Draw a larger circle around it, then another even larger one. You should have 3 rings of circles, like a target. These are your guides.",
-      "In the very centre circle, draw a flower shape — 6 or 8 petals around a dot. Trace it first in pencil before colouring.",
-      "In the middle ring, draw repeating shapes between the two circle lines — try teardrop shapes (called paisley), dots, or small diamonds spaced evenly around the circle.",
-      "In the outer ring, draw a border pattern — you could do zigzags, waves, or small triangles all the way around.",
-      "Now fill everything in with the brightest colours you have — traditional Rangoli uses red, orange, yellow, green, blue, pink, and white. Each section gets its own colour.",
-      "Add dots of chalk around the outside edge for decoration. Your Rangoli pattern is complete — traditionally made to welcome guests and bring good luck! ✨"
+      {text:"Place your dark paper flat. Using a compass or round object, draw a small circle in the centre — about 3cm wide.", img:"", emoji:"⭕"},
+      {text:"Draw a larger circle around it, then another even larger one. You now have 3 rings like a target.", img:"", emoji:"🎯"},
+      {text:"In the very centre circle, draw a flower shape — 6 or 8 petals around a dot. Draw in pencil first.", img:"", emoji:"🌸"},
+      {text:"In the middle ring, draw repeating shapes between the circles — try teardrop shapes, dots, or small diamonds spaced evenly around.", img:"", emoji:"💎"},
+      {text:"In the outer ring, draw a border pattern — zigzags, waves, or small triangles all the way around.", img:"", emoji:"〰️"},
+      {text:"Fill everything in with the brightest colours you have — red, orange, yellow, green, blue, pink, and white. Each section gets its own colour!", img:"", emoji:"🎨"},
+      {text:"Add dots of chalk around the outside edge. Your Rangoli is complete — traditionally made to welcome guests and bring good luck! ✨", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Rangoli_design.jpg/320px-Rangoli_design.jpg", emoji:"✨"},
     ]
   },
   {
     name:"Mexico", flag:"🇲🇽", unlock:25,
     craft:"Paper Marigold Flower",
-    description:"Make a colourful marigold — Mexico's special flower used in celebrations!",
-    materials:["6 sheets of tissue paper (yellow or orange — or mix both!)","Scissors","A pipe cleaner or twist tie","Green paper or ribbon for the stem (optional)"],
+    description:"Make a colourful marigold — Mexico's special flower!",
+    materials:["6 sheets of tissue paper (yellow or orange)","Scissors","A pipe cleaner or twist tie","Green paper or ribbon (optional)"],
     steps:[
-      "Stack all 6 sheets of tissue paper on top of each other in a neat pile. Trim them to roughly the same size if needed — about A5 size works well.",
-      "Starting at one of the short edges, fold the whole stack like an accordion (fold forward, then back, then forward again) in strips about 2cm wide, all the way to the other edge. You'll have a long folded strip.",
-      "Fold the strip in half to find the centre, then wrap your pipe cleaner tightly around the very middle of the strip and twist to secure. This is your flower's stem.",
-      "Use scissors to round off both ends of the accordion strip — this gives the petals a petal shape. You can also cut the tips into a point if you prefer.",
-      "Starting on one side, gently peel each layer of tissue paper upward toward the centre, one at a time. Do the same on the other side. Be gentle so the paper doesn't tear.",
-      "Fluff and adjust all the layers until you have a full, round, fluffy marigold bloom. Spread the petals evenly all around.",
-      "Wrap green ribbon or a strip of green paper around the pipe cleaner stem if you like. Your marigold is ready to display! 🌼"
+      {text:"Stack all 6 sheets of tissue paper neatly on top of each other. Trim them to roughly the same size if needed — about A5 size works well.", img:"", emoji:"📄"},
+      {text:"Starting at one short edge, fold the whole stack like an accordion — fold forward, then back, then forward — in 2cm strips all the way across.", img:"", emoji:"📋"},
+      {text:"Fold the strip in half to find the centre. Wrap your pipe cleaner tightly around the very middle and twist to secure. This is your flower's stem.", img:"", emoji:"🔧"},
+      {text:"Use scissors to round off both ends of the strip — this gives the petals a soft petal shape.", img:"", emoji:"✂️"},
+      {text:"Starting on one side, gently peel each layer of tissue paper upward toward the centre, one at a time. Do the same on the other side. Be gentle!", img:"", emoji:"🌺"},
+      {text:"Fluff and adjust all the layers until you have a full, round, fluffy marigold bloom. Spread the petals evenly all around.", img:"", emoji:"🌼"},
+      {text:"Wrap green ribbon around the pipe cleaner stem if you like. Your marigold is ready to display! 🌼", img:"", emoji:"🎊"},
     ]
   },
   {
     name:"China", flag:"🇨🇳", unlock:30,
     craft:"Chinese Lantern",
     description:"Make a traditional Chinese paper lantern to hang up!",
-    materials:["1 sheet of red or colourful A4 paper","Scissors","Ruler","Pencil","Glue stick or tape","A strip of paper for the handle (about 15cm × 2cm)"],
+    materials:["1 sheet of red or colourful A4 paper","Scissors","Ruler","Pencil","Glue or tape","A strip of paper for the handle (15cm × 2cm)"],
     steps:[
-      "Fold your sheet of paper in half lengthways (hot dog fold), so the long sides meet. Press the fold flat with your finger.",
-      "Starting from the folded edge, draw lines 2cm apart going up toward the open edge — but stop about 2cm before you reach the open edge. Draw about 8-10 lines like this.",
-      "Cut along each of those pencil lines, stopping at the mark 2cm from the open edge. You'll have a row of slits all along the folded edge.",
-      "Unfold the paper carefully so it's flat again. You'll see a row of slits across the middle.",
-      "Curl the paper into a tube shape so the two short edges meet. Glue or tape them together firmly. The slits will bow outward to make the lantern shape.",
-      "Flatten the top and bottom edges slightly so the lantern is rounder in the middle.",
-      "Tape or glue the strip of paper across the top opening as a handle so you can hang or carry it.",
-      "Decorate the outside with patterns, Chinese characters, or flowers if you like. Your lantern is ready to shine! 🏮"
+      {text:"Fold your sheet of paper in half lengthways so the long sides meet. Press the fold flat.", img:"", emoji:"📄"},
+      {text:"Starting from the folded edge, draw lines 2cm apart going toward the open edge — but stop about 2cm before you reach it. Draw about 8-10 lines.", img:"", emoji:"📏"},
+      {text:"Cut along each pencil line, stopping at the mark 2cm from the open edge. You'll have a row of slits along the folded edge.", img:"", emoji:"✂️"},
+      {text:"Unfold the paper carefully so it's flat again. You'll see the row of slits across the middle.", img:"", emoji:"👀"},
+      {text:"Curl the paper into a tube so the two short edges meet. Glue or tape them together firmly. The slits will bow outward to make the lantern shape!", img:"", emoji:"🏮"},
+      {text:"Flatten the top and bottom edges slightly so the lantern is rounder in the middle.", img:"", emoji:"👐"},
+      {text:"Tape or glue the strip of paper across the top opening as a handle. Decorate with patterns if you like. Your lantern is ready! 🏮", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Chinese_paper_lantern.jpg/220px-Chinese_paper_lantern.jpg", emoji:"🏮"},
     ]
   },
   {
     name:"Australia", flag:"🇦🇺", unlock:35,
     craft:"Aboriginal Dot Painting",
-    description:"Create your own Aboriginal-inspired dot art on paper or card!",
-    materials:["White or cream card or thick paper","Acrylic or poster paint (earthy colours: red, orange, yellow, brown, cream, white)","Cotton buds (lots — one per colour)","Pencil"],
+    description:"Create your own Aboriginal-inspired dot art!",
+    materials:["White or cream card","Acrylic or poster paint (red, orange, yellow, brown, cream, white)","Cotton buds (lots — one per colour)","Pencil"],
     steps:[
-      "Use a pencil to lightly sketch your design on the card. Traditional Aboriginal art tells a story — you could draw concentric circles (for a waterhole), wavy lines (for a river), or an animal outline like a lizard or kangaroo.",
-      "Think about the story your painting will tell. Write it in your notebook so you remember — for example, 'The kangaroo walked to the waterhole through the desert'.",
-      "Mix your paints if needed. Traditional colours are ochre red, orange, yellow, brown, cream, and white — try to keep to earthy tones.",
-      "Dip a clean cotton bud in your first colour and start making dots along the outlines of your pencil shapes. Press firmly and evenly to get clean round dots.",
-      "Fill in the spaces between your outlines with more dots in a second colour. Each area of your painting gets its own colour of dots.",
-      "Add a background by filling all the empty space with dots in a contrasting colour. Take your time — the more dots, the better it looks!",
-      "Use a fresh cotton bud for each new colour so they stay clean. Leave to dry fully before displaying. Your dot painting tells your own unique story! 🎨"
+      {text:"Lightly sketch your design on the card in pencil. Good ideas: circles (for a waterhole), wavy lines (for a river), or an animal outline like a lizard.", img:"", emoji:"✏️"},
+      {text:"Think about the story your painting will tell. Traditional Aboriginal art tells stories about the land, animals, and journeys.", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Aboriginal_art_1.jpg/320px-Aboriginal_art_1.jpg", emoji:"📖"},
+      {text:"Dip a clean cotton bud in your first colour and start making dots along the outlines of your pencil shapes. Press firmly for clean round dots.", img:"", emoji:"🔴"},
+      {text:"Fill in the spaces between outlines with dots in a second colour. Each area gets its own colour of dots.", img:"", emoji:"🟡"},
+      {text:"Add a background by filling all the empty space with dots in a contrasting colour. Take your time!", img:"", emoji:"🟠"},
+      {text:"Use a fresh cotton bud for each new colour so they stay clean.", img:"", emoji:"🖌️"},
+      {text:"Leave to dry fully before displaying. Your dot painting tells your own unique story! 🎨", img:"", emoji:"🎨"},
     ]
   },
   {
     name:"Greece", flag:"🇬🇷", unlock:40,
     craft:"Greek Mosaic Coaster",
-    description:"Make a beautiful mosaic coaster inspired by ancient Greek patterns!",
-    materials:["A square piece of card (about 15×15cm)","Lots of small squares of coloured paper (pre-cut, about 1cm each) — blue, white, gold, and black work great","Glue","A ruler and pencil"],
+    description:"Make a beautiful mosaic coaster inspired by ancient Greece!",
+    materials:["A square piece of card (15×15cm)","Small squares of coloured paper (1cm each) — blue, white, gold, black","Glue","Ruler and pencil"],
     steps:[
-      "Use your pencil and ruler to lightly draw a border about 2cm wide around the edge of your card square. Then draw a simple design in the middle — a Greek vase, a sun, a star, or a meander (zigzag border pattern).",
-      "Decide which colours go where. Traditional Greek mosaics use blue, white, gold/yellow, terracotta (orange-red), and black.",
-      "Start with the border. Apply glue along one section at a time and carefully place your small squares inside the border, leaving tiny gaps between them like real mosaic tiles.",
-      "Next, fill in your central design one colour at a time, pressing each paper square firmly onto the glue.",
-      "Finally, fill in the background area — the space around your design — with a contrasting colour.",
-      "Let the glue dry completely for at least 10 minutes. If you have clear tape or varnish, you can cover it to make it shine like a real mosaic tile.",
-      "Your Greek mosaic coaster is ready! You can use it on your desk or give it as a gift. 🏛️"
+      {text:"Use pencil and ruler to draw a border 2cm wide around the edge of your card. Then draw a simple design in the middle — a vase, a sun, or a star.", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Ancient_Greek_mosaic.jpg/320px-Ancient_Greek_mosaic.jpg", emoji:"✏️"},
+      {text:"Decide your colours. Traditional Greek mosaics use blue, white, gold/yellow, and black.", img:"", emoji:"🎨"},
+      {text:"Start with the border. Apply glue and place small squares inside the border, leaving tiny gaps between them like real mosaic tiles.", img:"", emoji:"🟦"},
+      {text:"Fill in your central design one colour at a time, pressing each paper square firmly.", img:"", emoji:"⬜"},
+      {text:"Finally fill in the background — the space around your design — with a contrasting colour.", img:"", emoji:"🟨"},
+      {text:"Let the glue dry for at least 10 minutes.", img:"", emoji:"⏰"},
+      {text:"Your Greek mosaic coaster is ready to use on your desk or give as a gift! 🏛️", img:"", emoji:"🏛️"},
     ]
   },
   {
     name:"Kenya", flag:"🇰🇪", unlock:45,
-    craft:"Maasai Beaded Bracelet",
+    craft:"Beaded Bracelet",
     description:"Create a colourful beaded bracelet inspired by the Maasai people of Kenya!",
-    materials:["Colourful beads (red, blue, white, green, orange — as many colours as possible)","Elastic thread or string (about 25cm)","Scissors","Tape to hold thread while working"],
+    materials:["Colourful beads (red, blue, white, green, orange)","Elastic thread or string (about 25cm)","Scissors","Tape"],
     steps:[
-      "Cut your elastic thread to about 25cm. Tie a knot at one end and tape it to the table so beads don't fall off while you work.",
-      "Maasai beaded patterns use bold stripes of colour. Plan your pattern first — for example: 3 red, 3 blue, 3 white, 3 green, repeat. Write it down so you remember!",
-      "Start threading beads onto the elastic following your colour pattern. Push each bead firmly down to the knot end.",
-      "Keep threading until the bracelet is long enough to fit around your wrist — hold it up to check the length. You need about 18-20cm of beads for most wrists.",
-      "Once it's long enough, remove the tape and tie the two ends of the elastic together in a tight double knot.",
-      "Trim any excess thread close to the knot. Slide it onto your wrist to check the fit.",
-      "Wear your Maasai-inspired bracelet with pride! In Maasai culture, the colours each have a meaning — red means bravery, white means peace, blue means the sky and rain. 📿"
+      {text:"Cut your elastic thread to about 25cm. Tie a knot at one end and tape it to the table so beads don't fall off.", img:"", emoji:"✂️"},
+      {text:"Plan your colour pattern first — for example: 3 red, 3 blue, 3 white, 3 green, repeat. In Maasai culture each colour has meaning — red = bravery, white = peace, blue = sky!", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Maasai_beadwork.jpg/320px-Maasai_beadwork.jpg", emoji:"📋"},
+      {text:"Start threading beads onto the elastic following your colour pattern. Push each bead firmly down to the knot end.", img:"", emoji:"📿"},
+      {text:"Keep threading until the bracelet is long enough to fit around your wrist — hold it up to check. You need about 18-20cm of beads.", img:"", emoji:"📏"},
+      {text:"Once long enough, remove the tape and tie both ends of the elastic together in a tight double knot.", img:"", emoji:"🔗"},
+      {text:"Trim any excess thread close to the knot.", img:"", emoji:"✂️"},
+      {text:"Wear your Maasai-inspired bracelet with pride! 📿", img:"", emoji:"📿"},
     ]
   },
   {
     name:"Sweden", flag:"🇸🇪", unlock:50,
     craft:"Paper Dala Horse",
-    description:"Make a Swedish Dala Horse — Sweden's most famous folk craft symbol!",
-    materials:["Thick white card","Scissors","Pencil","Red, blue, green, yellow paint or colouring pens","A thin paintbrush or fine felt-tip pen"],
+    description:"Make a Swedish Dala Horse — Sweden's most famous folk symbol!",
+    materials:["Thick white card","Scissors","Pencil","Red, blue, green, yellow colouring pens","A thin felt-tip pen"],
     steps:[
-      "Draw a simple horse shape on your card with pencil — a rounded body, four straight legs, a chunky neck, and a small head. Don't worry about it being perfect — Dala horses are meant to look chunky and stylised!",
-      "Cut out the horse shape carefully. If the legs are tricky, ask for help with scissors.",
-      "Paint or colour the whole horse bright red — this is the traditional Dala horse colour. Leave to dry.",
-      "Now add the decorative saddle. In the middle of the horse's back, draw a rectangular saddle shape and fill it in with blue or green.",
-      "Using a thin brush or fine pen, add flower patterns on the saddle — small petals in yellow, white, or contrasting colours. Traditional patterns include simple flowers with 4-6 petals.",
-      "Add lines and dots along the horse's neck, mane, and tail using contrasting colours. You can copy traditional patterns or make up your own.",
-      "Outline everything in black with a thin pen to make the colours pop. Your Dala Horse is complete — a symbol of Swedish pride and good luck! 🐴"
+      {text:"Draw a simple horse shape on your card with pencil — a rounded body, four straight legs, a chunky neck, and a small head. Dala horses are meant to look chunky!", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Dala_horse.jpg/220px-Dala_horse.jpg", emoji:"✏️"},
+      {text:"Cut out the horse shape carefully.", img:"", emoji:"✂️"},
+      {text:"Colour the whole horse bright red — this is the traditional Dala horse colour. Leave to dry.", img:"", emoji:"🔴"},
+      {text:"Draw a rectangular saddle shape in the middle of the horse's back and fill it in with blue or green.", img:"", emoji:"🟦"},
+      {text:"Using a thin pen, add flower patterns on the saddle — small petals in yellow, white, or contrasting colours.", img:"", emoji:"🌸"},
+      {text:"Add lines and dots along the horse's neck, mane, and tail using contrasting colours.", img:"", emoji:"✏️"},
+      {text:"Outline everything in black to make the colours pop. Your Dala Horse is complete — a symbol of good luck! 🐴", img:"", emoji:"🐴"},
     ]
   },
   {
     name:"Egypt", flag:"🇪🇬", unlock:55,
-    craft:"Papyrus Scroll & Hieroglyphs",
-    description:"Make your own ancient Egyptian scroll and write in hieroglyphs!",
-    materials:["A sheet of brown paper bag or tan-coloured paper","Tea (a used teabag)","Water","A brush or sponge","Black marker or pen","Two pencils or sticks for the scroll rollers","Tape"],
+    craft:"Mini Papyrus Scroll",
+    description:"Make your own ancient Egyptian scroll!",
+    materials:["A sheet of brown paper or paper bag","A used teabag","Water","A brush or sponge","Black marker or pen","Two pencils for scroll rollers","Tape"],
     steps:[
-      "Crumple your brown paper into a tight ball, then carefully open it out again. Do this 3-4 times — this gives it that ancient, worn papyrus texture.",
-      "Lightly brush the paper with cooled tea using a sponge or brush to add an aged yellowish-brown colour. Let it dry completely.",
-      "While it dries, look up a simple hieroglyph alphabet (or use this quick guide): A=eagle, B=foot, M=owl, N=water zigzag, R=mouth, S=folded cloth, T=bread loaf.",
-      "Once dry, use a black marker to draw a border around the edges of your paper — a thin line all the way around.",
-      "Write your name or a short message in hieroglyphs in the middle of the scroll. You can also draw a simple Egyptian scene — a pyramid, a sun, the Nile river.",
-      "Tape one pencil to the left edge of the paper and one to the right edge — these are your scroll rollers.",
-      "Roll each side inward toward the middle to make it look like a real scroll! Tie a piece of string around it to keep it rolled up. Your ancient scroll is complete! 📜"
+      {text:"Crumple your brown paper into a tight ball, then carefully open it out again. Do this 3-4 times — this gives it that ancient worn papyrus texture!", img:"", emoji:"📄"},
+      {text:"Lightly brush the paper with cooled tea using a sponge to add an aged yellowish-brown colour. Let it dry.", img:"", emoji:"🍵"},
+      {text:"Once dry, use a black marker to draw a border around the edges.", img:"", emoji:"📏"},
+      {text:"Write your name or a short message. You can also draw a pyramid, the Sun, or the River Nile!", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Papyrus_ani.jpg/320px-Papyrus_ani.jpg", emoji:"🔺"},
+      {text:"Tape one pencil to the left edge of the paper and one to the right — these are your scroll rollers.", img:"", emoji:"✏️"},
+      {text:"Roll each side inward toward the middle to make it look like a real scroll!", img:"", emoji:"📜"},
+      {text:"Tie a piece of string around it to keep it rolled up. Your ancient scroll is complete! 📜", img:"", emoji:"🎊"},
     ]
   },
   {
     name:"Italy", flag:"🇮🇹", unlock:60,
     craft:"Pasta Mosaic Picture",
     description:"Create a beautiful art piece using different pasta shapes!",
-    materials:["Thick card or a small canvas","Various dried pasta shapes (penne, farfalle, fusilli, rigatoni, spaghetti)","Strong glue (PVA works well)","Gold or silver spray paint OR paint in your chosen colours","Pencil"],
+    materials:["Thick card or small canvas","Various dried pasta shapes","Strong glue (PVA)","Gold or silver paint OR coloured paints","Pencil"],
     steps:[
-      "Lightly sketch your design onto the card in pencil. Good ideas: a sun, a flower, the Italian boot shape, or a simple landscape with mountains and a tower.",
-      "Start gluing pasta shapes around the outline of your design first. Use different shaped pasta for different parts — for example, spaghetti for lines, farfalle (bow ties) for flowers, penne for borders.",
-      "Fill in each section with pasta, pressing each piece firmly into the glue. Pack them close together but don't worry about gaps — it adds to the texture.",
-      "Fill the background with smaller pasta pieces or a texture of one type of pasta laid in rows.",
-      "Leave the glue to dry completely — at least 30 minutes. Don't move it while drying!",
-      "Once fully dry, you can paint the whole thing with gold or silver paint for an elegant look, OR paint each pasta section a different colour for a fun colourful version.",
-      "Add a loop of string to the back so you can hang it on the wall. Your pasta mosaic is a real work of art! 🍝"
+      {text:"Lightly sketch your design onto the card in pencil. Good ideas: a sun, a flower, or the Italian boot shape!", img:"", emoji:"✏️"},
+      {text:"Start gluing pasta shapes around the outline of your design first. Use different pasta for different parts — spaghetti for lines, farfalle (bow ties) for flowers.", img:"", emoji:"🍝"},
+      {text:"Fill in each section with pasta, pressing each piece firmly into the glue. Pack them close together.", img:"", emoji:"🔶"},
+      {text:"Fill the background with a texture of one type of pasta laid in rows.", img:"", emoji:"📐"},
+      {text:"Leave the glue to dry completely — at least 30 minutes. Don't move it while drying!", img:"", emoji:"⏰"},
+      {text:"Once fully dry, paint the whole thing gold or silver for an elegant look — OR paint each section a different colour!", img:"", emoji:"✨"},
+      {text:"Add a loop of string to the back so you can hang it on the wall. Your pasta mosaic is real art! 🍝", img:"", emoji:"🖼️"},
     ]
   },
   {
     name:"Portugal", flag:"🇵🇹", unlock:65,
     craft:"Azulejo Tile Design",
-    description:"Design your own Portuguese azulejo (blue and white tile) — Portugal's most famous art!",
-    materials:["White card cut into a 15×15cm square","Blue marker, pen, or paint","Pencil","Ruler"],
+    description:"Design your own Portuguese blue and white tile — Portugal's most famous art!",
+    materials:["White card cut into 15×15cm square","Blue marker, pen, or paint","Pencil","Ruler"],
     steps:[
-      "Use a pencil and ruler to lightly mark a 1cm border all the way around your white square. This will be your tile frame.",
-      "Inside the border, sketch your design in pencil first. Traditional azulejo patterns include: geometric shapes, flowers and leaves, sailing ships, or scenes from everyday life.",
-      "Draw a simple central motif — a flower with 8 petals works beautifully, or a sailing ship, or a bird surrounded by leaves.",
-      "Add a repeating pattern in the border — small zigzags, dots, or diamonds going all the way around.",
-      "Now trace over all your pencil lines carefully with your blue marker or paint. Use different thicknesses — thicker lines for outlines, thinner for details.",
-      "Add shading by drawing thin parallel lines close together in areas you want to look darker — traditional azulejos use different intensities of blue.",
-      "Let it dry completely. You can make several tiles with different patterns and arrange them together on your wall like a real Portuguese tile panel! 🇵🇹"
+      {text:"Use pencil and ruler to mark a 1cm border all the way around your white square. This is your tile frame.", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Azulejos_de_Sintra.jpg/320px-Azulejos_de_Sintra.jpg", emoji:"📐"},
+      {text:"Inside the border, sketch your design in pencil first. Traditional azulejo patterns include flowers and leaves, sailing ships, or patterns.", img:"", emoji:"✏️"},
+      {text:"Draw a simple central motif — a flower with 8 petals works beautifully, or a sailing ship, or a bird surrounded by leaves.", img:"", emoji:"🌸"},
+      {text:"Add a repeating pattern in the border — small zigzags, dots, or diamonds going all the way around.", img:"", emoji:"💠"},
+      {text:"Trace over all your pencil lines carefully with your blue marker. Use different thicknesses — thicker for outlines, thinner for details.", img:"", emoji:"🔵"},
+      {text:"Add shading by drawing thin parallel lines close together in areas you want darker.", img:"", emoji:"〰️"},
+      {text:"Let it dry completely. Make several tiles with different patterns and arrange them together! 🇵🇹", img:"", emoji:"🎊"},
     ]
   },
   {
     name:"USA", flag:"🇺🇸", unlock:70,
     craft:"Dream Catcher",
-    description:"Make a Native American-inspired dream catcher to hang by your bed!",
-    materials:["A paper plate","Scissors","Wool or string (white and at least one other colour)","Beads","A few feathers (craft feathers or paper feathers)","A pencil","Tape"],
+    description:"Make a Native American-inspired dream catcher for your bedroom!",
+    materials:["A paper plate","Scissors","Wool or string (white and other colours)","Beads","Craft feathers or paper feathers","Tape"],
     steps:[
-      "Cut the centre out of the paper plate, leaving just the outer ring. This is your dream catcher frame.",
-      "Cut several lengths of string or wool — about 40cm each. You'll need around 10-12 pieces.",
-      "Tie one end of your first string to the ring. Then stretch it across to the other side, wrap it once around the ring, and bring it back across to a new point — keep doing this, weaving back and forth to create a web pattern inside the ring.",
-      "As you weave, thread beads onto the string before you pull it tight — these catch the bad dreams. Tie off the last string to the ring with a double knot.",
-      "Cut 3 lengths of string about 25cm long. Tie them to the bottom of the ring, hanging down.",
-      "Thread beads onto each hanging string, knotting below each bead so they don't slide off.",
-      "Tie a feather to the end of each hanging string. Tie a loop of string to the top of the ring for hanging.",
-      "Hang by your bed — according to legend, dream catchers let good dreams through and catch bad dreams in the web! 🕸️"
+      {text:"Cut the centre out of the paper plate, leaving just the outer ring. This is your dream catcher frame.", img:"", emoji:"⭕"},
+      {text:"Cut several lengths of string — about 40cm each. You'll need around 10-12 pieces.", img:"", emoji:"✂️"},
+      {text:"Tie one end of your first string to the ring. Stretch it across to the other side, wrap it around the ring once, then bring it back across to a new point — keep weaving back and forth to create a web pattern.", img:"", emoji:"🕸️"},
+      {text:"As you weave, thread beads onto the string before you pull it tight — these catch the bad dreams!", img:"", emoji:"📿"},
+      {text:"Cut 3 lengths of string about 25cm long. Tie them to the bottom of the ring, hanging down.", img:"", emoji:"🧵"},
+      {text:"Thread beads onto each hanging string, knotting below each bead so they stay in place.", img:"", emoji:"📿"},
+      {text:"Tie a feather to the end of each hanging string. Tie a loop to the top for hanging. According to legend, dream catchers let good dreams through and catch bad ones! 🕸️", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Dreamcatcher.jpg/220px-Dreamcatcher.jpg", emoji:"🌙"},
     ]
   },
   {
     name:"Germany", flag:"🇩🇪", unlock:75,
-    craft:"Paper Star (Froebel Star)",
-    description:"Fold a beautiful 8-pointed paper star — a traditional German Christmas craft!",
-    materials:["4 strips of paper (each about 40cm × 2cm)", "You can cut these from newspaper, gift wrap, or coloured paper"],
+    craft:"Paper Star",
+    description:"Fold a beautiful 8-pointed paper star — a traditional German decoration!",
+    materials:["4 strips of paper (each about 40cm × 2cm)","You can cut these from newspaper, gift wrap, or coloured paper"],
     steps:[
-      "Take two strips and place them at right angles (like a plus sign +), one going over the other at the centre. The horizontal one goes over the vertical one.",
-      "Take the third strip and weave it diagonally through the first two — going over one and under the other. Take the fourth strip and weave it in the remaining diagonal direction.",
-      "Carefully tighten all four strips, pulling them inward toward the centre until you have a tight woven square in the middle with 8 equal-length tails sticking out.",
-      "Fold one of the top tails down and over the woven square, then tuck it under the edge of the square on the opposite side. This creates your first point.",
-      "Rotate the star 90° and repeat with the next tail. Do this for all 4 tails on this side — you'll have 4 points.",
-      "Flip the star over. Fold the remaining 4 tails the same way, each making a point. Tuck each one carefully under the previous layer.",
-      "Gently ease all the points outward to make them sharp and even. Your Froebel Star has 8 beautiful points and can hang as a decoration! ⭐"
+      {text:"Take two strips and place them at right angles like a plus sign (+), one going over the other at the centre.", img:"", emoji:"➕"},
+      {text:"Take the third strip and weave it diagonally through the first two — going over one and under the other.", img:"", emoji:"↗️"},
+      {text:"Take the fourth strip and weave it in the remaining diagonal direction.", img:"", emoji:"↘️"},
+      {text:"Carefully tighten all four strips toward the centre until you have a tight woven square in the middle with 8 equal-length tails sticking out.", img:"", emoji:"⬜"},
+      {text:"Fold one of the top tails down and over the woven square, then tuck it under the edge on the opposite side. This creates your first point! Rotate and repeat for all 4 tails.", img:"", emoji:"⭐"},
+      {text:"Flip the star over. Fold the remaining 4 tails the same way, each making a point. Tuck each one carefully under the previous layer.", img:"", emoji:"🌟"},
+      {text:"Gently ease all the points outward to make them sharp and even. Your 8-pointed star is complete! ⭐", img:"", emoji:"⭐"},
     ]
   },
   {
@@ -915,76 +652,73 @@ const COUNTRIES = [
     description:"Make a beautiful pop-up tango dancer card — Argentina's famous dance!",
     materials:["2 sheets of coloured card","Scissors","Colouring pens or pencils","Glue","Pencil"],
     steps:[
-      "On one piece of card, draw a tango dancer — a woman in a long flowing dress, or a man in a suit. Make the figure about 12cm tall. Add lots of detail to the costume: ruffles, patterns, and a flower in the hair.",
-      "Colour your dancer in bold tango colours: red, black, gold, and white are classic. Make the dress especially vibrant.",
-      "Cut out the dancer carefully.",
-      "Take your second piece of card and fold it in half to make a card. This is your base.",
-      "Open the card flat. Cut two parallel slits about 2cm long and 1cm apart in the centre fold — these are your pop-up tabs.",
-      "Fold the tab forward and back several times to loosen it, then push it through to the inside of the card so it pops up when opened.",
-      "Glue the back of your dancer figure to the pop-up tab. Close the card gently to make sure the dancer folds flat inside.",
-      "Decorate the outside of the card with tango-themed patterns — music notes, roses, or the Argentine flag colours. Open the card and your dancer leaps out! 💃"
+      {text:"On one piece of card, draw a tango dancer — a woman in a long flowing dress or a man in a suit. Make the figure about 12cm tall.", img:"", emoji:"✏️"},
+      {text:"Colour your dancer in bold tango colours: red, black, gold, and white are classic. Make the dress especially vibrant!", img:"", emoji:"🎨"},
+      {text:"Cut out the dancer carefully.", img:"", emoji:"✂️"},
+      {text:"Take your second piece of card and fold it in half to make a card. Open it flat.", img:"", emoji:"📄"},
+      {text:"Cut two parallel slits about 2cm long and 1cm apart in the centre fold — these are your pop-up tabs. Fold the tab forward and back several times to loosen it, then push it through to the inside.", img:"", emoji:"✂️"},
+      {text:"Glue the back of your dancer to the pop-up tab. Close the card gently to check the dancer folds flat inside.", img:"", emoji:"💃"},
+      {text:"Decorate the outside with music notes, roses, or the Argentine flag colours. Open the card and your dancer leaps out! 💃", img:"", emoji:"🎊"},
     ]
   },
   {
     name:"Thailand", flag:"🇹🇭", unlock:85,
     craft:"Paper Lotus Flower",
     description:"Fold a beautiful lotus flower — the sacred flower of Thailand!",
-    materials:["3 squares of pink or white paper (about 15×15cm each)","1 square of green paper (same size)","Scissors","Glue"],
+    materials:["3 squares of pink or white paper (15×15cm)","1 square of green paper (same size)","Scissors","Glue"],
     steps:[
-      "Take one pink square and fold it in half diagonally to make a triangle. Fold it in half again to make a smaller triangle.",
-      "Open it back to the full square. You should see diagonal crease lines crossing in the centre. Fold each corner into the centre point.",
-      "Flip the square over. Fold each corner into the centre again. You now have a small square.",
-      "Flip it over again. Fold each of the four corners into the centre one more time.",
-      "Now carefully reach underneath each corner flap and pull up the point hiding underneath — it will peel outward to form a petal. Do this for all four corners.",
-      "Repeat steps 1-5 with the other two pink sheets to make 3 identical petal pieces.",
-      "For the green base: fold the green square the same way but only do the first 'fold corners to centre' step twice, then pull up the corner flaps as your leaves.",
-      "Stack your three pink pieces on top of each other, rotating each one 45° so the petals fan out evenly. Glue them together. Place on top of the green base. Your lotus flower blooms! 🌸"
+      {text:"Take one pink square and fold it in half diagonally to make a triangle. Fold in half again to make a smaller triangle.", img:"", emoji:"📐"},
+      {text:"Open it back to the full square. You see diagonal crease lines. Fold each corner into the centre point.", img:"", emoji:"📄"},
+      {text:"Flip the square over. Fold each corner into the centre again. You now have a small square.", img:"", emoji:"🔲"},
+      {text:"Flip it over again. Fold each of the four corners into the centre one more time.", img:"", emoji:"📄"},
+      {text:"Carefully reach underneath each corner flap and pull up the hidden point — it peels outward to form a petal! Do this for all four corners.", img:"", emoji:"🌸"},
+      {text:"Repeat steps 1-5 with the other two pink sheets to make 3 identical petal pieces.", img:"", emoji:"🌸"},
+      {text:"Stack your three pink pieces on top of each other, rotating each one 45° so petals fan out. Glue together and place on the green base. Your lotus blooms! 🌸", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Lotus_flower_%28978658).jpg/320px-Lotus_flower_%28978658).jpg", emoji:"🌸"},
     ]
   },
   {
     name:"Nigeria", flag:"🇳🇬", unlock:90,
-    craft:"Adire Cloth Pattern",
-    description:"Create a Nigerian Adire (tie-dye inspired) pattern using paper and paint!",
-    materials:["White tissue paper or thin white paper","Watercolour paints or diluted food colouring (blue, purple, green)","Rubber bands or string","Water","A tray or plates for the paint","Kitchen paper"],
+    craft:"Tie-Dye Pattern",
+    description:"Create a Nigerian-inspired tie-dye pattern using paper and paint!",
+    materials:["White tissue paper or thin white paper","Watercolour paints or diluted food colouring (blue, purple, green)","Rubber bands or string","Water","A tray for the paint","Kitchen paper"],
     steps:[
-      "Fold your paper in half, then in half again, then again — keep folding until you have a small thick square or triangle of folded paper.",
-      "Wrap rubber bands tightly around the folded paper in several places — around the middle, around a corner, across a diagonal.",
-      "Mix your paint or food colouring with a little water in a tray — you want it quite strong in colour. Prepare 2 or 3 different colours.",
-      "Dip each corner and edge of your folded paper bundle into a different colour. Let the colour soak in — hold it in the dye for about 10 seconds.",
-      "You can dip different parts into different colours — be careful not to mix them or you'll get muddy colour.",
-      "Place the bundle on kitchen paper and leave for 2-3 minutes for the colour to set.",
-      "Carefully remove the rubber bands and unfold the paper slowly. Lay it flat on kitchen paper to dry.",
-      "The pattern revealed will be unique to you — symmetrical, unpredictable, and beautiful, just like traditional Adire cloth! 🎨"
+      {text:"Fold your paper in half, then in half again, then again — keep folding until you have a small thick square or triangle.", img:"", emoji:"📄"},
+      {text:"Wrap rubber bands tightly around the folded paper in several places — around the middle, a corner, across a diagonal.", img:"", emoji:"🔴"},
+      {text:"Mix your paint or food colouring with a little water in a tray — you want it quite strong in colour.", img:"", emoji:"🎨"},
+      {text:"Dip each corner and edge of your bundle into a different colour. Hold it in for about 10 seconds.", img:"", emoji:"💜"},
+      {text:"Dip different parts into different colours — be careful not to mix them or you'll get muddy colour!", img:"", emoji:"💛"},
+      {text:"Place the bundle on kitchen paper and leave for 2-3 minutes for the colour to set.", img:"", emoji:"⏰"},
+      {text:"Remove the rubber bands and unfold slowly. Lay flat to dry. The pattern will be unique and beautiful, just like traditional African cloth! 🎨", img:"", emoji:"🌈"},
     ]
   },
   {
     name:"Ireland", flag:"🇮🇪", unlock:95,
     craft:"Celtic Knot Bookmark",
     description:"Draw a traditional Celtic knot bookmark — Ireland's ancient art form!",
-    materials:["A strip of card about 6cm × 18cm (cut from a cereal box or card)","Pencil","Ruler","Green, gold, and black markers or pens"],
+    materials:["A strip of card about 6cm × 18cm (from a cereal box)","Pencil","Ruler","Green, gold, and black markers or pens"],
     steps:[
-      "Draw a pencil grid on your card strip: use your ruler to make a grid of squares, each about 1cm × 1cm, covering the whole strip.",
-      "Now draw the Celtic knot pattern. Start by drawing diagonal lines crossing the grid — they should go up-right, then cross and continue down-right, like weaving ribbon.",
-      "The key to a Celtic knot is the 'over and under' pattern. Every time two lines cross, one goes over and one goes under — alternate which one is on top each time you reach a crossing. Mark 'over' crossings with a small bridge shape.",
-      "Once you have your basic interweaving lines, add thickness to them — draw a parallel line on each side of every strand to make them look like ribbon.",
-      "Erase the pencil grid lines carefully, leaving only your knot pattern.",
-      "Colour the strands in with green and gold, making sure the 'over' strand is always a different shade to the 'under' strand so you can see the weaving.",
-      "Outline everything in black to make it sharp and clear. Your Celtic knot bookmark is ready to use — and every one is unique! 🍀"
+      {text:"Draw a pencil grid on your card strip using a ruler — make a grid of 1cm squares covering the whole strip.", img:"", emoji:"📏"},
+      {text:"Draw diagonal lines crossing the grid — they go up-right, then cross and continue down-right, like weaving ribbon.", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/KnotworkBasicGrid.svg/320px-KnotworkBasicGrid.svg.png", emoji:"✏️"},
+      {text:"The key to Celtic knots is 'over and under' — every time two lines cross, one goes over and one goes under. Alternate which one is on top each time.", img:"", emoji:"➿"},
+      {text:"Add thickness to your lines — draw a parallel line on each side of every strand to make them look like ribbon.", img:"", emoji:"📏"},
+      {text:"Erase the pencil grid lines carefully, leaving only your knot pattern.", img:"", emoji:"🧹"},
+      {text:"Colour the strands in green and gold, making the 'over' strand a different shade to the 'under' strand so you can see the weaving.", img:"", emoji:"🟢"},
+      {text:"Outline everything in black to make it sharp and clear. Your Celtic bookmark is ready! 🍀", img:"", emoji:"🍀"},
     ]
   },
   {
     name:"New Zealand", flag:"🇳🇿", unlock:100,
     craft:"Maori Koru Spiral Card",
-    description:"Create a Maori-inspired Koru spiral card — the symbol of new life in New Zealand!",
-    materials:["White card","Black marker (thick and thin)","Green, teal, and brown colouring pens","Pencil","Compass or circular object to trace"],
+    description:"Create a Maori Koru spiral card — the symbol of new beginnings!",
+    materials:["White card","Black marker (thick and thin)","Green, teal, and brown colouring pens","Pencil"],
     steps:[
-      "On your white card, use a pencil to lightly draw a large fern frond shape — a long curved stem with smaller curved shapes branching off like a feather or fern leaf.",
-      "At the tip of the main stem, draw a tight spiral (koru) curling inward — this represents new life beginning to unfurl, like a baby fern.",
-      "Add smaller koru spirals at the tip of each side branch too.",
-      "The Maori style uses bold black outlines and flowing curves. Trace over all your pencil lines with a thick black marker, making confident, flowing strokes.",
-      "Add detail lines inside each shape — Maori art uses parallel lines, fine spirals, and triangular patterns called 'kowhaiwhai'.",
-      "Colour your design in natural tones: deep greens, teal, earthy brown, and cream. Leave some areas white for contrast.",
-      "Use a fine black marker to add tiny dots and detail patterns inside the shapes. The finished koru card represents growth, new beginnings, and harmony — a perfect gift! 🌿"
+      {text:"On your white card, draw a large fern frond shape in pencil — a long curved stem with smaller curved shapes branching off like a feather or fern leaf.", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Koru.svg/220px-Koru.svg.png", emoji:"✏️"},
+      {text:"At the tip of the main stem, draw a tight spiral curling inward — this is the koru! It represents new life beginning to unfurl, like a baby fern.", img:"", emoji:"🌀"},
+      {text:"Add smaller koru spirals at the tip of each side branch too.", img:"", emoji:"🌀"},
+      {text:"Trace over all your pencil lines with a thick black marker, making confident flowing strokes.", img:"", emoji:"🖊️"},
+      {text:"Add detail lines inside each shape — parallel lines, fine spirals, and triangular patterns.", img:"", emoji:"〰️"},
+      {text:"Colour in natural tones: deep greens, teal, earthy brown, and cream. Leave some areas white for contrast.", img:"", emoji:"🎨"},
+      {text:"Add tiny dots and detail patterns inside the shapes with a fine pen. The koru represents growth and new beginnings — a perfect gift! 🌿", img:"", emoji:"🌿"},
     ]
   }
 ];
@@ -992,395 +726,161 @@ const COUNTRIES = [
 // ══════════════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════════════
-
-const KEY = 'beaWorld_v3';
+const KEY = 'beaWorld_v4';
 let state;
-
 function defaultState() {
-  return {
-    xp: 0,
-    level: 1,
-    totalAnswered: 0,
-    totalCorrect: 0,
-    craftsCompleted: [],
-    countriesUnlocked: [],
-    streak: 0,
-    lastPlayDate: null,
-    history: { maths: [], spelling: [], geography: [], science: [] }
-  };
+  return { xp:0, level:1, totalAnswered:0, totalCorrect:0, craftsCompleted:[], countriesUnlocked:[], streak:0, lastPlayDate:null, history:{maths:[],spelling:[],geography:[],science:[]} };
 }
-
 function loadState() {
-  try {
-    const saved = localStorage.getItem(KEY);
-    state = saved ? JSON.parse(saved) : defaultState();
-    if (!state.history) state.history = { maths: [], spelling: [], geography: [], science: [] };
-  } catch(e) { state = defaultState(); }
+  try { const s = localStorage.getItem(KEY); state = s ? JSON.parse(s) : defaultState(); if (!state.history) state.history={maths:[],spelling:[],geography:[],science:[]}; } catch(e){ state=defaultState(); }
   checkStreak();
 }
-
-function saveState() {
-  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
-}
-
+function saveState() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
 function checkStreak() {
-  const today = new Date().toDateString();
   if (!state.lastPlayDate) return;
-  const last = new Date(state.lastPlayDate);
-  const diff = (new Date() - last) / (1000 * 60 * 60 * 24);
-  if (diff > 2) { state.streak = 0; saveState(); }
+  const diff = (new Date() - new Date(state.lastPlayDate)) / (1000*60*60*24);
+  if (diff > 2) { state.streak=0; saveState(); }
 }
-
 function markPlayedToday() {
   const today = new Date().toDateString();
   if (state.lastPlayDate !== today) {
-    if (state.lastPlayDate) {
-      const last = new Date(state.lastPlayDate);
-      const diff = (new Date(today) - last) / (1000 * 60 * 60 * 24);
-      if (diff <= 2) state.streak++;
-      else state.streak = 1;
-    } else {
-      state.streak = 1;
-    }
-    state.lastPlayDate = today;
-    saveState();
+    if (state.lastPlayDate) { const diff=(new Date(today)-new Date(state.lastPlayDate))/(1000*60*60*24); state.streak = diff<=2 ? state.streak+1 : 1; } else { state.streak=1; }
+    state.lastPlayDate=today; saveState();
   }
 }
-
-// XP & Level
-const XP_PER_LEVEL = [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500, 3200, 4000];
-function getLevel(xp) {
-  let lv = 1;
-  for (let i = 1; i < XP_PER_LEVEL.length; i++) {
-    if (xp >= XP_PER_LEVEL[i]) lv = i + 1;
-    else break;
-  }
-  return Math.min(lv, 10);
-}
-function getLevelThresholds(lv) {
-  const cur = XP_PER_LEVEL[lv - 1] || 0;
-  const nxt = XP_PER_LEVEL[lv] || XP_PER_LEVEL[XP_PER_LEVEL.length - 1];
-  return { cur, nxt };
-}
-
+const XP_PER_LEVEL=[0,100,250,450,700,1000,1400,1900,2500,3200,4000];
+function getLevel(xp){ let lv=1; for(let i=1;i<XP_PER_LEVEL.length;i++){ if(xp>=XP_PER_LEVEL[i]) lv=i+1; else break; } return Math.min(lv,10); }
+function getLevelThresholds(lv){ return { cur:XP_PER_LEVEL[lv-1]||0, nxt:XP_PER_LEVEL[lv]||XP_PER_LEVEL[XP_PER_LEVEL.length-1] }; }
 function updateLevelBar() {
-  const lv = getLevel(state.xp);
-  const { cur, nxt } = getLevelThresholds(lv);
-  const pct = lv >= 10 ? 100 : Math.round(((state.xp - cur) / (nxt - cur)) * 100);
-  document.getElementById('levelLabel').textContent = `⭐ Level ${lv}`;
-  document.getElementById('xpBar').style.width = pct + '%';
-  document.getElementById('xpLabel').textContent = `${state.xp} / ${nxt} XP`;
-  document.getElementById('streakBadge').textContent = `🔥 ${state.streak} day${state.streak !== 1 ? 's' : ''}`;
+  const lv=getLevel(state.xp); const {cur,nxt}=getLevelThresholds(lv);
+  const pct=lv>=10?100:Math.round(((state.xp-cur)/(nxt-cur))*100);
+  document.getElementById('levelLabel').textContent=`⭐ Level ${lv}`;
+  document.getElementById('xpBar').style.width=pct+'%';
+  document.getElementById('xpLabel').textContent=`${state.xp} / ${nxt} XP`;
+  document.getElementById('streakBadge').textContent=`🔥 ${state.streak} day${state.streak!==1?'s':''}`;
 }
-
 function updateHome() {
-  const subjectNames = ['maths','spelling','geography','science'];
-  subjectNames.forEach(s => {
-    const el = document.getElementById(s + 'Count');
-    if (el) el.textContent = `${QUESTIONS[s].length} questions`;
-  });
-  document.getElementById('statTotal').textContent = state.totalAnswered;
-  document.getElementById('statCorrect').textContent = state.totalCorrect;
-  document.getElementById('statCrafts').textContent = state.craftsCompleted.length;
+  ['maths','spelling','geography','science'].forEach(s=>{ const el=document.getElementById(s+'Count'); if(el) el.textContent=`${QUESTIONS[s].length} questions`; });
+  document.getElementById('statTotal').textContent=state.totalAnswered;
+  document.getElementById('statCorrect').textContent=state.totalCorrect;
+  document.getElementById('statCrafts').textContent=state.craftsCompleted.length;
 }
 
 // ══════════════════════════════════════════════════
 // QUIZ
 // ══════════════════════════════════════════════════
-
-let currentSubject = '';
-let quizQuestions = [];
-let currentQIndex = 0;
-let correctCount = 0;
-let answered = false;
-
-function getSmartQuestions(subject, count) {
-  const pool = QUESTIONS[subject];
-  const history = state.history[subject] || [];
-  // Prefer questions not recently asked
-  const recent = new Set(history.slice(-30));
-  let fresh = pool.filter((_,i) => !recent.has(i));
-  if (fresh.length < count) fresh = pool;
-  // Shuffle and pick
-  const shuffled = [...Array(pool.length).keys()].filter(i => fresh === pool || !recent.has(i));
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  const picked = shuffled.slice(0, count);
-  // Update history
-  state.history[subject] = [...history, ...picked].slice(-50);
-  return picked.map(i => ({ ...pool[i], idx: i }));
+let currentSubject='', quizQuestions=[], currentQIndex=0, correctCount=0, answered=false;
+function getSmartQuestions(subject,count) {
+  const pool=QUESTIONS[subject]; const history=state.history[subject]||[];
+  const recent=new Set(history.slice(-30));
+  let indices=[...Array(pool.length).keys()];
+  let fresh=indices.filter(i=>!recent.has(i));
+  if(fresh.length<count) fresh=indices;
+  for(let i=fresh.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fresh[i],fresh[j]]=[fresh[j],fresh[i]]; }
+  const picked=fresh.slice(0,count);
+  state.history[subject]=[...history,...picked].slice(-50);
+  return picked.map(i=>({...pool[i],idx:i}));
 }
-
 function startQuiz(subject) {
-  currentSubject = subject;
-  const labels = { maths: '🔢 Maths', spelling: '📝 Spelling', geography: '🌍 Geography', science: '🔬 Science' };
-  document.getElementById('quizSubjectLabel').textContent = labels[subject];
-
-  quizQuestions = getSmartQuestions(subject, 10);
-  currentQIndex = 0;
-  correctCount = 0;
-  markPlayedToday();
-  showScreen('screenQuiz');
-  renderQuestion();
+  currentSubject=subject;
+  const labels={maths:'🔢 Maths',spelling:'📝 Spelling',geography:'🌍 Geography',science:'🔬 Science'};
+  document.getElementById('quizSubjectLabel').textContent=labels[subject];
+  quizQuestions=getSmartQuestions(subject,10); currentQIndex=0; correctCount=0;
+  markPlayedToday(); showScreen('screenQuiz'); renderQuestion();
 }
-
 function renderQuestion() {
-  const q = quizQuestions[currentQIndex];
-  const total = quizQuestions.length;
-  answered = false;
-
-  document.getElementById('questionNum').textContent = `Question ${currentQIndex + 1} of ${total}`;
-  document.getElementById('questionText').textContent = q.q;
-  document.getElementById('quizProgress').style.width = (currentQIndex / total * 100) + '%';
-  document.getElementById('quizCounter').textContent = `${currentQIndex}/${total}`;
-  document.getElementById('feedbackMsg').style.display = 'none';
-  document.getElementById('nextBtn').style.display = 'none';
-
-  const list = document.getElementById('optionsList');
-  list.innerHTML = '';
-  q.opts.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.textContent = opt;
-    btn.onclick = () => selectAnswer(i, q.a, btn);
-    list.appendChild(btn);
-  });
+  const q=quizQuestions[currentQIndex]; const total=quizQuestions.length; answered=false;
+  document.getElementById('questionNum').textContent=`Question ${currentQIndex+1} of ${total}`;
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('quizProgress').style.width=(currentQIndex/total*100)+'%';
+  document.getElementById('quizCounter').textContent=`${currentQIndex}/${total}`;
+  document.getElementById('feedbackMsg').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  const list=document.getElementById('optionsList'); list.innerHTML='';
+  q.opts.forEach((opt,i)=>{ const btn=document.createElement('button'); btn.className='option-btn'; btn.textContent=opt; btn.onclick=()=>selectAnswer(i,q.a,btn); list.appendChild(btn); });
 }
-
-function selectAnswer(chosen, correct, btn) {
-  if (answered) return;
-  answered = true;
-  state.totalAnswered++;
-
-  const allBtns = document.querySelectorAll('.option-btn');
-  allBtns.forEach(b => b.classList.add('disabled'));
-  allBtns[correct].classList.add('correct');
-
-  const fb = document.getElementById('feedbackMsg');
-  fb.style.display = 'block';
-
-  if (chosen === correct) {
-    correctCount++;
-    state.totalCorrect++;
-    btn.classList.add('correct');
-    fb.className = 'feedback-msg correct';
-    fb.textContent = ['⭐ Brilliant!','🎉 Correct!','🌟 Amazing!','✅ That\'s right!','🔥 Correct!'][Math.floor(Math.random()*5)];
-    // Check for new country unlock
-    checkCountryUnlock();
-  } else {
-    btn.classList.add('wrong');
-    fb.className = 'feedback-msg wrong';
-    fb.textContent = `❌ Not quite — the answer is "${quizQuestions[currentQIndex].opts[correct]}"`;
-  }
-
-  document.getElementById('nextBtn').style.display = 'block';
-  saveState();
+function selectAnswer(chosen,correct,btn) {
+  if(answered) return; answered=true; state.totalAnswered++;
+  const allBtns=document.querySelectorAll('.option-btn'); allBtns.forEach(b=>b.classList.add('disabled')); allBtns[correct].classList.add('correct');
+  const fb=document.getElementById('feedbackMsg'); fb.style.display='block';
+  if(chosen===correct){ correctCount++; state.totalCorrect++; btn.classList.add('correct'); fb.className='feedback-msg correct'; fb.textContent=['⭐ Brilliant!','🎉 Correct!','🌟 Amazing!','✅ That\'s right!','🔥 Correct!'][Math.floor(Math.random()*5)]; checkCountryUnlock(); }
+  else { btn.classList.add('wrong'); fb.className='feedback-msg wrong'; fb.textContent=`❌ Not quite — the answer is "${quizQuestions[currentQIndex].opts[correct]}"`; }
+  document.getElementById('nextBtn').style.display='block'; saveState();
 }
-
 function checkCountryUnlock() {
-  const score = state.totalCorrect;
-  COUNTRIES.forEach(c => {
-    if (score >= c.unlock && !state.countriesUnlocked.includes(c.name)) {
-      state.countriesUnlocked.push(c.name);
-      setTimeout(() => showUnlockModal(c), 800);
-    }
-  });
+  COUNTRIES.forEach(c=>{ if(state.totalCorrect>=c.unlock&&!state.countriesUnlocked.includes(c.name)){ state.countriesUnlocked.push(c.name); setTimeout(()=>showUnlockModal(c),800); } });
 }
-
-function nextQuestion() {
-  currentQIndex++;
-  if (currentQIndex >= quizQuestions.length) {
-    showResults();
-  } else {
-    renderQuestion();
-  }
-}
-
+function nextQuestion() { currentQIndex++; if(currentQIndex>=quizQuestions.length) showResults(); else renderQuestion(); }
 function showResults() {
-  const total = quizQuestions.length;
-  const pct = Math.round(correctCount / total * 100);
-  const xpGain = Math.round(correctCount * 10 + (pct === 100 ? 30 : 0));
-  state.xp += xpGain;
-  const oldLevel = state.level;
-  state.level = getLevel(state.xp);
-  saveState();
-
-  let emoji = '😊';
-  let title = 'Good try!';
-  if (pct === 100) { emoji = '🏆'; title = 'Perfect Score!'; }
-  else if (pct >= 80) { emoji = '🌟'; title = 'Brilliant!'; }
-  else if (pct >= 60) { emoji = '👍'; title = 'Well done!'; }
-
-  document.getElementById('resultsEmoji').textContent = emoji;
-  document.getElementById('resultsTitle').textContent = title;
-  document.getElementById('resultsScore').textContent = `You got ${correctCount} out of ${total} correct (${pct}%)`;
-  document.getElementById('xpGained').textContent = `+${xpGain} XP earned!`;
-
-  if (state.level > oldLevel) {
-    showToast(`🎉 Level Up! You're now Level ${state.level}!`);
-  }
-
-  updateLevelBar();
-  showScreen('screenResults');
+  const total=quizQuestions.length; const pct=Math.round(correctCount/total*100); const xpGain=Math.round(correctCount*10+(pct===100?30:0));
+  state.xp+=xpGain; const oldLevel=state.level; state.level=getLevel(state.xp); saveState();
+  let emoji='😊',title='Good try!';
+  if(pct===100){emoji='🏆';title='Perfect Score!';}else if(pct>=80){emoji='🌟';title='Brilliant!';}else if(pct>=60){emoji='👍';title='Well done!';}
+  document.getElementById('resultsEmoji').textContent=emoji; document.getElementById('resultsTitle').textContent=title;
+  document.getElementById('resultsScore').textContent=`You got ${correctCount} out of ${total} correct (${pct}%)`;
+  document.getElementById('xpGained').textContent=`+${xpGain} XP earned!`;
+  if(state.level>oldLevel) showToast(`🎉 Level Up! You're now Level ${state.level}!`);
+  updateLevelBar(); showScreen('screenResults');
 }
-
-function playAgain() { startQuiz(currentSubject); }
+function playAgain(){ startQuiz(currentSubject); }
 
 // ══════════════════════════════════════════════════
 // COUNTRIES & CRAFTS
 // ══════════════════════════════════════════════════
-
 function showCountries() {
-  const grid = document.getElementById('countriesGrid');
-  grid.innerHTML = '';
-  COUNTRIES.forEach(c => {
-    const unlocked = state.countriesUnlocked.includes(c.name);
-    const done = state.craftsCompleted.includes(c.name);
-    const div = document.createElement('div');
-    div.className = 'country-card ' + (unlocked ? 'unlocked' : 'locked');
-    div.innerHTML = `
-      <div class="country-flag">${c.flag}</div>
-      <div class="country-info">
-        <div class="country-name">${c.name}</div>
-        <div class="country-status">${unlocked ? (done ? '✅ Craft completed!' : `🎨 ${c.craft} — tap to start!`) : `🔒 Unlock at ${c.unlock} correct answers (you have ${state.totalCorrect})`}</div>
-      </div>
-      <div class="country-lock">${unlocked ? (done ? '✅' : '🎨') : '🔒'}</div>
-    `;
-    if (unlocked) div.onclick = () => openCraft(c);
-    grid.appendChild(div);
+  const grid=document.getElementById('countriesGrid'); grid.innerHTML='';
+  COUNTRIES.forEach(c=>{
+    const unlocked=state.countriesUnlocked.includes(c.name); const done=state.craftsCompleted.includes(c.name);
+    const div=document.createElement('div'); div.className='country-card '+(unlocked?'unlocked':'locked');
+    div.innerHTML=`<div class="country-flag">${c.flag}</div><div class="country-info"><div class="country-name">${c.name}</div><div class="country-status">${unlocked?(done?'✅ Craft completed!':`🎨 ${c.craft} — tap to start!`):`🔒 Unlock at ${c.unlock} correct answers (you have ${state.totalCorrect})`}</div></div><div class="country-lock">${unlocked?(done?'✅':'🎨'):'🔒'}</div>`;
+    if(unlocked) div.onclick=()=>openCraft(c); grid.appendChild(div);
   });
   showScreen('screenCountries');
 }
-
-let currentCraft = null;
-let currentStep = 0;
-
+let currentCraft=null, currentStep=0;
 function openCraft(country) {
-  currentCraft = country;
-  currentStep = 0;
-
-  document.getElementById('craftTitle').textContent = `${country.flag} ${country.craft}`;
-  document.getElementById('craftCountry').textContent = `${country.name} — ${country.description}`;
-
-  // Materials
-  const matDiv = document.getElementById('craftMaterials');
-  matDiv.innerHTML = `<h3>🧰 You'll Need:</h3><ul>${country.materials.map(m => `<li>${m}</li>`).join('')}</ul>`;
-
-  // Steps
-  const stepsDiv = document.getElementById('craftSteps');
-  stepsDiv.innerHTML = '';
-  country.steps.forEach((s, i) => {
-    const div = document.createElement('div');
-    div.className = 'craft-step' + (i === 0 ? ' active' : '');
-    div.id = `step_${i}`;
-    div.innerHTML = `<div class="step-num">${i + 1}</div><div class="step-text">${s}</div>`;
+  currentCraft=country; currentStep=0;
+  document.getElementById('craftTitle').textContent=`${country.flag} ${country.craft}`;
+  document.getElementById('craftCountry').textContent=`${country.name} — ${country.description}`;
+  const matDiv=document.getElementById('craftMaterials');
+  matDiv.innerHTML=`<h3>🧰 You'll Need:</h3><ul>${country.materials.map(m=>`<li>${m}</li>`).join('')}</ul>`;
+  const stepsDiv=document.getElementById('craftSteps'); stepsDiv.innerHTML='';
+  country.steps.forEach((s,i)=>{
+    const div=document.createElement('div'); div.className='craft-step'+(i===0?' active':''); div.id=`step_${i}`;
+    let imgHTML='';
+    if(s.img) { imgHTML=`<img class="step-img" src="${s.img}" alt="Step ${i+1}" onerror="this.style.display='none'"/>`; }
+    else { imgHTML=`<div class="step-img-placeholder">${s.emoji||'🎨'}</div>`; }
+    div.innerHTML=`<div class="step-num">${i+1}</div><div class="step-text">${s.text}</div>${imgHTML}`;
     stepsDiv.appendChild(div);
   });
-
-  renderCraftNav();
-  showScreen('screenCraft');
+  renderCraftNav(); showScreen('screenCraft');
 }
-
 function renderCraftNav() {
-  const total = currentCraft.steps.length;
-  const nav = document.getElementById('craftNav');
-  const doneBtn = document.getElementById('btnDoneCraft');
-
-  if (currentStep >= total - 1) {
-    nav.style.display = 'none';
-    doneBtn.style.display = 'block';
-  } else {
-    nav.style.display = 'flex';
-    doneBtn.style.display = 'none';
-    const prevBtn = nav.querySelector('.btn-prev-step');
-    prevBtn.style.opacity = currentStep === 0 ? '0.4' : '1';
-    prevBtn.style.pointerEvents = currentStep === 0 ? 'none' : '';
-  }
+  const total=currentCraft.steps.length; const nav=document.getElementById('craftNav'); const doneBtn=document.getElementById('btnDoneCraft');
+  if(currentStep>=total-1){ nav.style.display='none'; doneBtn.style.display='block'; }
+  else { nav.style.display='flex'; doneBtn.style.display='none'; const prevBtn=nav.querySelector('.btn-prev-step'); prevBtn.style.opacity=currentStep===0?'0.4':'1'; prevBtn.style.pointerEvents=currentStep===0?'none':''; }
 }
-
 function nextStep() {
-  const total = currentCraft.steps.length;
-  if (currentStep < total - 1) {
-    document.getElementById(`step_${currentStep}`).classList.remove('active');
-    document.getElementById(`step_${currentStep}`).classList.add('done');
-    currentStep++;
-    document.getElementById(`step_${currentStep}`).classList.add('active');
-    document.getElementById(`step_${currentStep}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-    renderCraftNav();
-  }
+  if(currentStep<currentCraft.steps.length-1){ document.getElementById(`step_${currentStep}`).classList.remove('active'); document.getElementById(`step_${currentStep}`).classList.add('done'); currentStep++; document.getElementById(`step_${currentStep}`).classList.add('active'); document.getElementById(`step_${currentStep}`).scrollIntoView({behavior:'smooth',block:'center'}); renderCraftNav(); }
 }
-
 function prevStep() {
-  if (currentStep > 0) {
-    document.getElementById(`step_${currentStep}`).classList.remove('active');
-    currentStep--;
-    document.getElementById(`step_${currentStep}`).classList.remove('done');
-    document.getElementById(`step_${currentStep}`).classList.add('active');
-    document.getElementById(`step_${currentStep}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-    renderCraftNav();
-  }
+  if(currentStep>0){ document.getElementById(`step_${currentStep}`).classList.remove('active'); currentStep--; document.getElementById(`step_${currentStep}`).classList.remove('done'); document.getElementById(`step_${currentStep}`).classList.add('active'); document.getElementById(`step_${currentStep}`).scrollIntoView({behavior:'smooth',block:'center'}); renderCraftNav(); }
 }
-
 function completeCraft() {
-  if (!state.craftsCompleted.includes(currentCraft.name)) {
-    state.craftsCompleted.push(currentCraft.name);
-    state.xp += 50;
-    state.level = getLevel(state.xp);
-    saveState();
-    updateLevelBar();
-    showToast('🎉 +50 XP — Craft completed!');
-  }
+  if(!state.craftsCompleted.includes(currentCraft.name)){ state.craftsCompleted.push(currentCraft.name); state.xp+=50; state.level=getLevel(state.xp); saveState(); updateLevelBar(); showToast('🎉 +50 XP — Craft completed!'); }
   showCountries();
 }
-
-// ══════════════════════════════════════════════════
-// UNLOCK MODAL
-// ══════════════════════════════════════════════════
-
 function showUnlockModal(country) {
-  document.getElementById('modalEmoji').textContent = country.flag;
-  document.getElementById('modalTitle').textContent = `${country.name} Unlocked!`;
-  document.getElementById('modalText').textContent = `Amazing work! You've unlocked ${country.name}. Head to Craft World to make a ${country.craft}!`;
+  document.getElementById('modalEmoji').textContent=country.flag; document.getElementById('modalTitle').textContent=`${country.name} Unlocked!`;
+  document.getElementById('modalText').textContent=`Amazing work! You've unlocked ${country.name}. Head to Craft World to make a ${country.craft}!`;
   document.getElementById('unlockModal').classList.add('show');
 }
-function closeModal() {
-  document.getElementById('unlockModal').classList.remove('show');
-}
-
-// ══════════════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════════════
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
-}
-
-function goHome() {
-  updateLevelBar();
-  updateHome();
-  showScreen('screenHome');
-}
-
+function closeModal(){ document.getElementById('unlockModal').classList.remove('show'); }
+function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function goHome(){ updateLevelBar(); updateHome(); showScreen('screenHome'); }
 let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// ══════════════════════════════════════════════════
-// BOOT
-// ══════════════════════════════════════════════════
-
-loadState();
-updateLevelBar();
-updateHome();
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),3000); }
+loadState(); updateLevelBar(); updateHome();
 </script>
 </body>
 </html>
