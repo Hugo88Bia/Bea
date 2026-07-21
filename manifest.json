@@ -1,0 +1,31 @@
+{
+  "name": "Learning with Santi & Bea",
+  "short_name": "Santi & Bea",
+  "description": "A fun, safe homeschool learning app for kids — maths, spelling, science, reading, crafts and more, in English and Portuguese.",
+  "start_url": "./bea-craft-world-v37.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#9B59B6",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
