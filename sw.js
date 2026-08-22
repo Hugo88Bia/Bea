@@ -1,6 +1,6 @@
 // Service worker for "Learning with Santi & Bea"
 // Minimal offline-capable cache. Bump CACHE_VERSION when you release a new app version.
-const CACHE_VERSION = 'sb-v37';
+const CACHE_VERSION = 'sb-v38';
 const CORE = [
   './index.html',
   './manifest.json',
